@@ -12,9 +12,15 @@ The emacs part is provided in separate files:
 
 so that they can be used in other keymaps.
 
+
+## Limitation
+
+If this module is used, Windows' ALT menu (single tappint of ALT) will be disabled.
+
+
 ## How to use emacs mode
 
-Because QMK is changing actively, this repository is not a fork of the entire qmk_firmware repository tree, but is expected to be cloned as a submodule under some specific keymap.
+Because QMK is changing actively, this repository is not a fork of the entire qmk_firmware repository, but is a submodule that is expected to be cloned under some specific keymap directory.
 
 For example:
 ```
@@ -22,7 +28,7 @@ $ cd qmk_firmware/keyboards/ergodash/rev1/keymaps/
 $ git submodule add https://github.com/orihikarna/qmk_ergodash_emacs_keymap.git your_keymap_name
 ```
 
-To include the emacs mode in your keymap, include `process_emacs.h` in `keymap.c` as:
+To enable the Emacs mode in your keymap, include `process_emacs.h` in `keymap.c` as:
 ```
 #include QMK_KEYBOARD_H
 #include "keymap_jp.h"
@@ -39,15 +45,22 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 ```
 
+Also, do not forget to add the source file to `rules.mk`:
+```
+...
 
-## Supported key bindings:
+SRC += process_emacs.c
+```
 
-* Default mode
+
+## Supported Emacs key bindings:
+
+### Default mode
 
 | Input  | Translation  | Description  |
 |---|---|---|
-| C-q  |   | Toggle emacs mode  |
-| C-x  |   | A 2 stroke key  |
+| C-q  |   | Toggle Emacs mode  |
+| C-x  |   | C-x prefix key  |
 | C-' '|   | Enter mark selection  |
 | C-g  | Esc  | Cancel  |
 | C-m  | Enter  | Enter  |
@@ -86,10 +99,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 | M-O  | C-o  | Open  |
 
 
-C-x prefix mode
+### C-x prefix mode
 
 | Input  | Translation  | Description  |
 |---|---|---|
+| C-q  |   | Toggle Emacs mode  |
 | C-s  | C-s  | Save  |
 | C-f  | C-o  | Open  |
 | C-c  | M-F  | Close  |
@@ -97,11 +111,13 @@ C-x prefix mode
 | h  | C-a  | Select all  |
 
 
-Mark selection mode
+### Mark selection mode
+
+Backlight is toggled when it is enabled.
 
 | Input  | Translation  | Description  |
 |---|---|---|
-| C-q  |   | Toggle emacs mode  |
+| C-q  |   | Toggle Emacs mode  |
 | C-g  | Right  | Cancel mark selection mode  |
 | C-w  | C-x, Left, Right  | Cut  |
 | M-w  | C-c, Left  | Copy  |
