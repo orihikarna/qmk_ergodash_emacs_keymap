@@ -4,10 +4,7 @@
 
 This is a personal keymap (Japanese) for ergodash/rev1.
 
-This also implements a MacOS-style emacs mode for Windows.
-Mac-style means that that standard Ctrl+z/x/c/v is mapped to Alt+z/x/c/v.
-Instead of implementing the two stroke keys such as C-x, C-f/s, this library uses the Option+o/s style.
-
+This also implements an Emacs key-binding mode for Windows.
 
 The emacs part is provided in separate files:
 - process_emacs.c
@@ -22,7 +19,7 @@ Because QMK is changing actively, this repository is not a fork of the entire qm
 For example:
 ```
 $ cd qmk_firmware/keyboards/ergodash/rev1/keymaps/
-$ git submodule add https://github.com/orihikarna/qmk_ergodash_emacs_keymap.git orihika
+$ git submodule add https://github.com/orihikarna/qmk_ergodash_emacs_keymap.git your_keymap_name
 ```
 
 To include the emacs mode in your keymap, include `process_emacs.h` in `keymap.c` as:
@@ -50,6 +47,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 | Input  | Translation  | Description  |
 |---|---|---|
 | C-q  |   | Toggle emacs mode  |
+| C-x  |   | A 2 stroke key  |
 | C-' '|   | Enter mark selection  |
 | C-g  | Esc  | Cancel  |
 | C-m  | Enter  | Enter  |
@@ -86,6 +84,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 | SM-z  | C-y  | Redo  |
 | M-N  | C-n  | New  |
 | M-O  | C-o  | Open  |
+
+
+C-x prefix mode
+
+| Input  | Translation  | Description  |
+|---|---|---|
+| C-s  | C-s  | Save  |
+| C-f  | C-o  | Open  |
+| C-c  | M-F  | Close  |
+| u  | C-z  | Undo  |
+| h  | C-a  | Select all  |
 
 
 Mark selection mode

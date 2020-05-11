@@ -10,7 +10,7 @@
 #define MOD_SM (MOD_S|MOD_M)
 
 // emacs mode type (use right keycodes)
-#define MOD_FUNC  MOD_BIT(KC_RCTL)
+#define MOD_TABLE MOD_BIT(KC_RCTL)
 #define MOD_MACRO MOD_BIT(KC_RSFT)
 
 
@@ -25,24 +25,24 @@ typedef struct {
 #define MAP_ENTRY_SIZE sizeof( SMapEntry )
 
 typedef void (*key_func_t)( uint8_t keycode );
-typedef void (*map_table_post_func_t)( uint8_t entry_index );
+
+typedef void (*map_table_on_enter_func_t)( void );
+typedef void (*map_table_on_search_func_t)( uint8_t entry_index );
 
 typedef struct {
     const uint8_t (*m_table)[MAP_ENTRY_SIZE];
     uint8_t m_size;
-    map_table_post_func_t m_post_func;
+    map_table_on_enter_func_t m_on_enter_func;
+    map_table_on_search_func_t m_on_search_func;
 } SMapTable;
 
 
 // definitions
-#define MAP_TABLE_COUNT 2
-#define MAP_TABLE_INDEX_DEFAULT 0
-#define MAP_TABLE_INDEX_MARKSEL 1
-
-enum map_functions {
-    EMF_ToggleEmacsMode,
-    EMF_EnterMarkSelection,
-};
+#define MAP_TABLE_INDEX_NONE     0
+#define MAP_TABLE_INDEX_DEFAULT  1
+#define MAP_TABLE_INDEX_CXPREFIX 2
+#define MAP_TABLE_INDEX_MARKSEL  3
+#define MAP_TABLE_COUNT          4
 
 enum map_macros {
     EMM_OpenLine,
@@ -57,27 +57,10 @@ enum map_macros {
 
 // implementations
 static uint8_t map_table_index = MAP_TABLE_INDEX_DEFAULT;
-static bool is_emacs_mode = true;
 static uint8_t pressed_mods = 0;
 static uint8_t pressed_keycode = KC_NO;
 static uint8_t mapped_mods = 0;
 static uint8_t mapped_keycode = KC_NO;
-
-
-// mapped functions
-static void func_toggle_emacs_mode( uint8_t keycode ) {
-    is_emacs_mode = !is_emacs_mode;
-}
-
-static void func_enter_mark_selection( uint8_t keycode ) {
-    map_table_index = MAP_TABLE_INDEX_MARKSEL;
-    backlight_toggle();
-}
-
-static const key_func_t func_ptrs[] = {
-    [EMF_ToggleEmacsMode] = &func_toggle_emacs_mode,
-    [EMF_EnterMarkSelection] = &func_enter_mark_selection,
-};
 
 
 // macro definitions
@@ -101,9 +84,15 @@ static const uint16_t* macro_seqs[] = {
 
 
 // mapping tables
+static const uint8_t map_table_none[][MAP_ENTRY_SIZE] = {
+    { MOD_C,    KC_Q,    MOD_TABLE, MAP_TABLE_INDEX_DEFAULT },
+};
+#define MAP_COUNT_NONE (sizeof( map_table_none ) / sizeof( map_table_none[0] ))
+
 static const uint8_t map_table_default[][MAP_ENTRY_SIZE] = {
-    { MOD_C,    KC_Q,    MOD_FUNC,  EMF_ToggleEmacsMode },// should be at 0
-    { MOD_C,    KC_SPC,  MOD_FUNC,  EMF_EnterMarkSelection },
+    { MOD_C,    KC_Q,    MOD_TABLE, MAP_TABLE_INDEX_NONE },
+    { MOD_C,    KC_X,    MOD_TABLE, MAP_TABLE_INDEX_CXPREFIX },
+    { MOD_C,    KC_SPC,  MOD_TABLE, MAP_TABLE_INDEX_MARKSEL },
     { MOD_C,    KC_G,    0,         KC_ESC  },// Esc
     { MOD_C,    KC_M,    0,         KC_ENT  },// Enter
     { MOD_C,    KC_A,    0,         KC_HOME },// Home
@@ -126,6 +115,7 @@ static const uint8_t map_table_default[][MAP_ENTRY_SIZE] = {
     { MOD_M,    KC_D,    MOD_MACRO, EMM_KillWord },
     { MOD_C,    JP_SCLN, 0,         JP_ZKHK },// IME
     { MOD_C,    KC_I,    0,         KC_TAB  },// Tab
+    { MOD_CS,   KC_I,    MOD_S,     KC_TAB  },// S-Tab
     { MOD_C,    KC_W,    MOD_C,     KC_X    },// cut
     { MOD_M,    KC_W,    MOD_C,     KC_C    },// copy
     { MOD_C,    KC_Y,    MOD_C,     KC_V    },// paste
@@ -144,8 +134,22 @@ static const uint8_t map_table_default[][MAP_ENTRY_SIZE] = {
 };
 #define MAP_COUNT_DEFAULT (sizeof( map_table_default ) / sizeof( map_table_default[0] ))
 
+const uint8_t map_table_cxprefix[][MAP_ENTRY_SIZE] = {
+    { MOD_C,    KC_Q,    MOD_TABLE, MAP_TABLE_INDEX_NONE },
+    { MOD_C,    KC_S,    MOD_C,     KC_S },// save
+    { MOD_C,    KC_F,    MOD_C,     KC_O },// open
+    { MOD_C,    KC_C,    MOD_M,     KC_F4 },// close
+    { 0,        KC_U,    MOD_C,     KC_Z },// undo
+    { 0,        KC_H,    MOD_C,     KC_A },// All
+};
+#define MAP_COUNT_CXPREFIX (sizeof( map_table_cxprefix ) / sizeof( map_table_cxprefix[0] ))
+
+static void map_table_cxcprefix_on_search( uint8_t index ) {
+    map_table_index = MAP_TABLE_INDEX_DEFAULT;
+}
+
 const uint8_t map_table_marksel[][MAP_ENTRY_SIZE] = {
-    { MOD_C,    KC_Q,    MOD_FUNC,  EMF_ToggleEmacsMode },// should be at 0
+    { MOD_C,    KC_Q,    MOD_TABLE, MAP_TABLE_INDEX_NONE },
     { MOD_C,    KC_G,    MOD_MACRO, EMM_MarkCancel },
     { MOD_C,    KC_W,    MOD_MACRO, EMM_MarkCut },// cut
     { MOD_M,    KC_W,    MOD_MACRO, EMM_MarkCopy },// copy
@@ -168,8 +172,11 @@ const uint8_t map_table_marksel[][MAP_ENTRY_SIZE] = {
 };
 #define MAP_COUNT_MARKSEL (sizeof( map_table_marksel ) / sizeof( map_table_marksel[0] ))
 
+static void map_table_marksel_on_enter( void ) {
+    backlight_toggle();
+}
 
-static void map_table_marksel_post( uint8_t index ) {
+static void map_table_marksel_on_search( uint8_t index ) {
     if (index < 4 || MAP_COUNT_MARKSEL <= index) {
         map_table_index = MAP_TABLE_INDEX_DEFAULT;
         backlight_toggle();
@@ -177,8 +184,10 @@ static void map_table_marksel_post( uint8_t index ) {
 }
 
 static SMapTable map_tables[MAP_TABLE_COUNT] = {
-    (SMapTable) { map_table_default, MAP_COUNT_DEFAULT, NULL }, 
-    (SMapTable) { map_table_marksel, MAP_COUNT_MARKSEL, map_table_marksel_post },   
+    [MAP_TABLE_INDEX_NONE]     = (SMapTable) { map_table_none,     MAP_COUNT_NONE,     NULL, NULL }, 
+    [MAP_TABLE_INDEX_DEFAULT]  = (SMapTable) { map_table_default,  MAP_COUNT_DEFAULT,  NULL, NULL }, 
+    [MAP_TABLE_INDEX_CXPREFIX] = (SMapTable) { map_table_cxprefix, MAP_COUNT_CXPREFIX, NULL, map_table_cxcprefix_on_search }, 
+    [MAP_TABLE_INDEX_MARKSEL]  = (SMapTable) { map_table_marksel,  MAP_COUNT_MARKSEL,  map_table_marksel_on_enter, map_table_marksel_on_search },
 };
 
 
@@ -215,7 +224,7 @@ static bool unmap_key( void ) {
     if (mapped_mods == 0 && mapped_keycode == KC_NO) {
         return false;
     }
-    if (mapped_mods == MOD_FUNC) {
+    if (mapped_mods == MOD_TABLE) {
         // do nothing
     } else if (mapped_mods == MOD_MACRO) {
         register_mods2( pressed_mods );
@@ -230,9 +239,12 @@ static bool unmap_key( void ) {
 }
 
 static void map_key( uint8_t mods, uint8_t keycode ) {
-    if (mods == MOD_FUNC) {
-        // call the function
-        (*func_ptrs[keycode])( keycode );
+    if (mods == MOD_TABLE) {
+        map_table_index = keycode;
+        const SMapTable* map_table = &map_tables[map_table_index];
+        if (map_table->m_on_enter_func) {
+            (*map_table->m_on_enter_func)();
+        }
     } else if (mods == MOD_MACRO) {
         unregister_mods2( pressed_mods );
         {// send the macro sequence
@@ -279,7 +291,6 @@ bool process_record_emacs( uint16_t keycode, keyrecord_t* record ) {
                 const uint8_t num_entries = map_table->m_size;
                 uint8_t index;
                 for (index = 0; index < num_entries; ++index) {
-                    if (index > 0 && is_emacs_mode == false) break;// the first entry toggles the emacs mode
                     const SMapEntry* map = (const SMapEntry*) map_table->m_table[index];
                     if (match_mods2( pressed_mods, map->src_mods ) && keycode == map->src_code) {// found!
                         pressed_keycode = keycode;
@@ -288,8 +299,8 @@ bool process_record_emacs( uint16_t keycode, keyrecord_t* record ) {
                         break;
                     }
                 }
-                if (map_table->m_post_func) {
-                    (*map_table->m_post_func)( index );
+                if (map_table->m_on_search_func) {
+                    (*map_table->m_on_search_func)( index );
                 }
             }
             if (unmapped == false && mapped == false) {
