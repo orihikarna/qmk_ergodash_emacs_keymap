@@ -1,6 +1,17 @@
 #include QMK_KEYBOARD_H
 #include "keymap_jp.h"
 
+//#define USE_JP
+
+#ifdef USE_JP
+#define UKC_COMM JP_COMM
+#define UKC_DOT  JP_DOT
+#else
+#define UKC_COMM KC_COMM
+#define UKC_DOT  KC_DOT
+#endif
+
+
 // emacs mode modifiers (use left keycods)
 #define MOD_C MOD_BIT(KC_LCTL)
 #define MOD_S MOD_BIT(KC_LSFT)
@@ -23,8 +34,6 @@ typedef struct {
 } SMapEntry;
 
 #define MAP_ENTRY_SIZE sizeof( SMapEntry )
-
-typedef void (*key_func_t)( uint8_t keycode );
 
 typedef void (*map_table_on_enter_func_t)( void );
 typedef void (*map_table_on_search_func_t)( uint8_t entry_index );
@@ -113,15 +122,14 @@ static const uint8_t map_table_default[][MAP_ENTRY_SIZE] = {
     { MOD_C,    KC_K,    MOD_MACRO, EMM_KillLine },
     { MOD_C,    KC_T,    MOD_MACRO, EMM_SwapChars },
     { MOD_M,    KC_D,    MOD_MACRO, EMM_KillWord },
-    { MOD_C,    JP_SCLN, 0,         JP_ZKHK },// IME
     { MOD_C,    KC_I,    0,         KC_TAB  },// Tab
     { MOD_CS,   KC_I,    MOD_S,     KC_TAB  },// S-Tab
     { MOD_C,    KC_W,    MOD_C,     KC_X    },// cut
     { MOD_M,    KC_W,    MOD_C,     KC_C    },// copy
     { MOD_C,    KC_Y,    MOD_C,     KC_V    },// paste
     { MOD_M,    KC_Y,    MOD_C,     KC_Y    },// redo
-    { MOD_SM,   JP_COMM, MOD_C,     KC_HOME },// top
-    { MOD_SM,   JP_DOT,  MOD_C,     KC_END  },// bottom
+    { MOD_SM,   UKC_COMM,MOD_C,     KC_HOME },// top
+    { MOD_SM,   UKC_DOT, MOD_C,     KC_END  },// bottom
     // mac style
     { MOD_M,    KC_Z,    MOD_C,     KC_Z },// undo
     { MOD_M,    KC_X,    MOD_C,     KC_X },// cut
@@ -131,6 +139,9 @@ static const uint8_t map_table_default[][MAP_ENTRY_SIZE] = {
     { MOD_SM,   KC_Z,    MOD_C,     KC_Y },// redo
     { MOD_M,    KC_N,    MOD_C,     KC_N },// new
     { MOD_M,    KC_O,    MOD_C,     KC_O },// open
+#ifdef USE_JP
+    { MOD_C,    JP_SCLN, 0,         JP_ZKHK },// IME
+#endif
 };
 #define MAP_COUNT_DEFAULT (sizeof( map_table_default ) / sizeof( map_table_default[0] ))
 
@@ -163,8 +174,8 @@ const uint8_t map_table_marksel[][MAP_ENTRY_SIZE] = {
     { MOD_C,    KC_V,    MOD_S,     KC_PGDN },
     { MOD_M,    KC_F,    MOD_CS,    KC_RGHT },// next word
     { MOD_M,    KC_B,    MOD_CS,    KC_LEFT },// prev word
-    { MOD_SM,   JP_COMM, MOD_CS,    KC_HOME },
-    { MOD_SM,   JP_DOT,  MOD_CS,    KC_END },
+    { MOD_SM,   UKC_COMM,MOD_CS,    KC_HOME },
+    { MOD_SM,   UKC_DOT, MOD_CS,    KC_END },
     { 0,        KC_LEFT, MOD_S,     KC_LEFT },
     { 0,        KC_RGHT, MOD_S,     KC_RGHT },
     { 0,        KC_UP,   MOD_S,     KC_UP },

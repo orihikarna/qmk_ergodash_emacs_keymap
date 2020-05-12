@@ -81,7 +81,6 @@ SRC += process_emacs.c
 | C-k  | S-End, C-x  | Kill line  |
 | C-t  | S-Right, C-x, Left, C-v, Right  | Swap chars  |
 | M-d  | CS-Right, C-x  | Kill word  |
-| C-;  | ZkHk  | Toggle Japanese IME  |
 | C-i  | Tab  | Tab  |
 | C-w  | C-x  | Cut  |
 | M-W  | C-c  | Copy  |
@@ -89,6 +88,11 @@ SRC += process_emacs.c
 | M-y  | C-y  | Redo  |
 | SM-,  | C-Home  | Top  |
 | SM-.  | C-End  | Bottom  |
+
+In addition, here are defined MacOS style shortcuts although these are not Emacsen.
+
+| Input  | Translation  | Description  |
+|---|---|---|
 | M-z  | C-z  | Undo  |
 | M-x  | C-x  | Cut  |
 | M-c  | C-c  | Copy  |
@@ -97,6 +101,12 @@ SRC += process_emacs.c
 | SM-z  | C-y  | Redo  |
 | M-N  | C-n  | New  |
 | M-O  | C-o  | Open  |
+
+And finally, toggle Japanese IME (when `USE_JP` is defined).
+
+| Input  | Translation  | Description  |
+|---|---|---|
+| C-;  | 全角半角  | Toggle Japanese IME  |
 
 
 ### C-x prefix mode
