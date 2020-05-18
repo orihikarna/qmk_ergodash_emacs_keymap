@@ -97,6 +97,7 @@ In addition, here are defined MacOS style shortcuts although these are not Emacs
 | M-x  | C-x  | Cut  |
 | M-c  | C-c  | Copy  |
 | M-v  | C-v  | Paste  |
+| M-a  | C-a  | All  |
 | M-s  | C-s  | Save  |
 | SM-z  | C-y  | Redo  |
 | M-N  | C-n  | New  |

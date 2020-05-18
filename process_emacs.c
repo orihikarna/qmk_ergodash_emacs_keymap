@@ -1,7 +1,7 @@
 #include QMK_KEYBOARD_H
 #include "keymap_jp.h"
 
-//#define USE_JP
+#define USE_JP
 
 #ifdef USE_JP
 #define UKC_COMM JP_COMM
@@ -135,6 +135,7 @@ static const uint8_t map_table_default[][MAP_ENTRY_SIZE] = {
     { MOD_M,    KC_X,    MOD_C,     KC_X },// cut
     { MOD_M,    KC_C,    MOD_C,     KC_C },// copy
     { MOD_M,    KC_V,    MOD_C,     KC_V },// paste
+    { MOD_M,    KC_A,    MOD_C,     KC_A },// All
     { MOD_M,    KC_S,    MOD_C,     KC_S },// save
     { MOD_SM,   KC_Z,    MOD_C,     KC_Y },// redo
     { MOD_M,    KC_N,    MOD_C,     KC_N },// new
