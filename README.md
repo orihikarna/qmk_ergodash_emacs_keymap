@@ -15,6 +15,8 @@ so that they can be used in other keymaps.
 
 ## Limitation
 
+This module does not support tapping nor oneshot features such as MT, MO etc.
+
 If this module is used, Windows' ALT menu (single tappint of ALT) will be disabled.
 
 
