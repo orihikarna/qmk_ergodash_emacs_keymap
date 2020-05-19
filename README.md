@@ -74,7 +74,7 @@ SRC += process_emacs.c
 | C-n  | v  | Down  |
 | CS-v  | PageUp  | Page up  |
 | C-v  | PageDown  | Page down  |
-| M-F  | C-'->'  | Next word  |
+| M-f  | C-'->'  | Next word  |
 | M-b  | C-'<-'  | Previous word  |
 | C-d  | Del  | Delete  |
 | C-h  | BS  | Backspace  |
@@ -85,7 +85,7 @@ SRC += process_emacs.c
 | M-d  | CS-Right, C-x  | Kill word  |
 | C-i  | Tab  | Tab  |
 | C-w  | C-x  | Cut  |
-| M-W  | C-c  | Copy  |
+| M-w  | C-c  | Copy  |
 | C-y  | C-v  | Paste  |
 | M-y  | C-y  | Redo  |
 | SM-,  | C-Home  | Top  |
@@ -102,8 +102,8 @@ In addition, here are defined MacOS style shortcuts although these are not Emacs
 | M-a  | C-a  | All  |
 | M-s  | C-s  | Save  |
 | SM-z  | C-y  | Redo  |
-| M-N  | C-n  | New  |
-| M-O  | C-o  | Open  |
+| M-n  | C-n  | New  |
+| M-o  | C-o  | Open  |
 
 And finally, toggle Japanese IME (when `USE_JP` is defined).
 
