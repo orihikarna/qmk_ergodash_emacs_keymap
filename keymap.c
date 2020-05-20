@@ -119,9 +119,9 @@ void persistent_default_layer_set(uint16_t default_layer) {
 typedef struct {
     uint16_t keycode;
     uint16_t key_hold;
-    uint8_t key_tap;
-    bool pressed;
+    uint16_t key_tap;
     uint16_t time;
+    bool pressed;
 } mytap_t;
 
 static mytap_t taps[] = {
@@ -129,7 +129,8 @@ static mytap_t taps[] = {
     { RT_ENT, RAISE,   KC_ENT, false, 0 },
     { ST_SPC, KC_RSFT, KC_SPC, false, 0 },
 };
-#define TAP_COUNT (sizeof( taps) / sizeof( taps[0] ))
+#define MYTAP_COUNT (sizeof( taps) / sizeof( taps[0] ))
+#define MYTAPPING_TERM 500
 
 static bool process_record_layer( uint16_t keycode, keyrecord_t* record ) {
     switch (keycode) {
@@ -178,12 +179,12 @@ static bool _process_record_user( uint16_t keycode, keyrecord_t* record ) {
     return true;
 }
 
-static keyrecord_t pressed = {{{0,0},true,0}, {0,0,0,0,0}};
-static keyrecord_t depressed = {{{0,0},false,0}, {0,0,0,0,0}};
+static keyrecord_t pressed   = { { { 0, 0 }, true,  0 }, { 0, 0, 0, 0, 0 } };
+static keyrecord_t depressed = { { { 0, 0 }, false, 0 }, { 0, 0, 0, 0, 0 } };
 
-bool process_record_user( uint16_t keycode, keyrecord_t* record ) {
+static bool process_record_mytap( uint16_t keycode, keyrecord_t* record ) {
     bool cont = true;
-    for (uint8_t n = 0; n < TAP_COUNT; ++n) {
+    for (uint8_t n = 0; n < MYTAP_COUNT; ++n) {
         mytap_t* tap = &taps[n];
         if (tap->keycode == keycode) {
             if (record->event.pressed) {
@@ -194,9 +195,9 @@ bool process_record_user( uint16_t keycode, keyrecord_t* record ) {
                 if (_process_record_user( tap->key_hold, &depressed )) unregister_code16( tap->key_hold );
                 if (tap->pressed) {
                     tap->pressed = false;
-                    if (TIMER_DIFF_16( record->event.time, tap->time ) < 500) {
-                        if (_process_record_user( tap->key_tap, &pressed )) register_code( tap->key_tap );
-                        if (_process_record_user( tap->key_tap, &depressed )) unregister_code( tap->key_tap );
+                    if (TIMER_DIFF_16( record->event.time, tap->time ) < MYTAPPING_TERM) {
+                        if (_process_record_user( tap->key_tap, &pressed )) register_code16( tap->key_tap );
+                        if (_process_record_user( tap->key_tap, &depressed )) unregister_code16( tap->key_tap );
                     }
                 }
             }
@@ -207,6 +208,10 @@ bool process_record_user( uint16_t keycode, keyrecord_t* record ) {
             }
         }
     }
-    if (cont == false) return false;
+    return cont;
+}
+
+bool process_record_user( uint16_t keycode, keyrecord_t* record ) {
+    if (process_record_mytap( keycode, record ) == false) return false;
     return _process_record_user( keycode, record );
 }
