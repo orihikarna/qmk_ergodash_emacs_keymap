@@ -15,9 +15,12 @@ so that they can be used in other keymaps.
 
 ## Limitation
 
-This module does not support tapping nor oneshot features such as MT, MO etc.
+* This module does not support tapping features such as LT, MT etc.
+In fact, it does not work with non-basic keycodes that generates basic keycodes as a result of some processing.
+This is because such non-basic keycodes will be handled in the later stage of process_record chain, and the generated keycodes will never be passed to this module.
+In order to realize features similar to LT, MT, however, you can use a method used in `keymap.c` where tapping is handled within `process_record_user()` and the generated keycodes are passed to `process_record_emacs()` to allow for this module to handle them.
 
-If this module is used, Windows' ALT menu (single tappint of ALT) will be disabled.
+* If this module is used, Windows' ALT menu (single tappint of ALT) will be disabled.
 
 
 ## How to use emacs mode
