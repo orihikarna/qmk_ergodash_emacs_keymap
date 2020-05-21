@@ -24,65 +24,65 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   /* Qwerty
    * ,--------------------------------------------------------                    --------------------------------------------------------.
-   * |       |       |       |       |       |       |       |                    |       |       |       |       |       |       |       |
+   * |       |   1   |   2   |   3   |   4   |   5   |       |                    |       |   6   |   7   |   8   |   9   |   0   |       |
    * |-------+-------+-------+-------+-------+-------+-------+                    +-------+-------+-------+-------+-------+-------+-------|
    * |  ESC  |   Q   |   W   |   E   |   R   |   T   |       |                    |       |   Y   |   U   |   I   |   O   |   P   |   -   |
    * |-------+-------+-------+-------+-------+-------+-------+                    +-------+-------+-------+-------+-------+-------+-------|
    * |  Tab  |   A   |   S   |   D   |   F   |   G   |       |                    |       |   H   |   J   |   K   |   L   |   ;   |   :   |
    * |-------+-------+-------+-------+-------+-------+-------+                    +-------+-------+-------+-------+-------+-------+-------|
-   * | Shift |   Z   |   X   |   C   |   V   |   B   |       |                    |       |   N   |   M   |   ,   |   .   |   /   |   \   |
+   * |   [   |   Z   |   X   |   C   |   V   |   B   |       |                    |       |   N   |   M   |   ,   |   .   |   /   |   ]   |
    * |-------+-------+-------+-------+-------+-------+-------+-------+    +-------+------ +-------+-------+-------+-------+-------+-------|
-   * |       |       |       |       |       |  Alt  |  Ctrl |Low/Del|    |Raz/Ent|Sft/Spc|       |       |       |       |       |       |
+   * | Shift |       |       |       |       |  Alt  |  Ctrl |Low/Del|    |Raz/Ent| Shift | Space |       |       |       |       |   \   |
    * ,-------------------------------+       +-----------------------+    +-----------------------+       +-------------------------------.
    */
   [_QWERTY] = LAYOUT( \
-    KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,                      KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   \
+    KC_NO,   KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_NO,                      KC_NO,   KC_6,    KC_7,    KC_8,    KC_9,    KC_0,  KC_NO,   \
     KC_ESC,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_NO,                      KC_NO,   KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    JP_MINS, \
     KC_TAB,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_NO,                      KC_NO,   KC_H,    KC_J,    KC_K,    KC_L,    JP_SCLN, JP_COLN, \
-    KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_NO,                      KC_NO,   KC_N,    KC_M,    JP_COMM, JP_DOT,  JP_SLSH, JP_BSLS, \
-    KC_NO,   KC_NO,   KC_NO,   KC_NO,            KC_LALT, KC_LCTL, LT_DEL,    RT_ENT, ST_SPC,  KC_NO,            KC_NO,   KC_NO,   KC_NO,   KC_NO    \
+    JP_LBRC, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_NO,                      KC_NO,   KC_N,    KC_M,    JP_COMM, JP_DOT,  JP_SLSH, JP_RBRC, \
+    KC_LSFT, KC_NO,   KC_NO,   KC_NO,            KC_LALT, KC_LCTL, LT_DEL,    RT_ENT, KC_RSFT, KC_SPC,           KC_NO,   KC_NO,   KC_NO,   JP_BSLS  \
   ),
 
   /* Lower
    * ,--------------------------------------------------------                    --------------------------------------------------------.
-   * |       |       |       |       |       |       |       |                    |       |       |       |       |       |       |       |
+   * |       |   F1  |   F2  |   F3  |   F4  |   F5  |       |                    |       |   F6  |   F7  |   F8  |   F9  |  F10  |       |
    * |-------+-------+-------+-------+-------+-------+-------+                    +-------+-------+-------+-------+-------+-------+-------|
-   * |  ESC  |   !   |   "   |   #   |   $   |   %   |       |                    |       |   &   |   '   |   (   |   )   |   @   |   =   |
+   * |  ESC  |   !   |   "   |   #   |   $   |   %   |       |                    |       |   &   |   '   |   (   |   )   |   @   |  F11  |
    * |-------+-------+-------+-------+-------+-------+-------+                    +-------+-------+-------+-------+-------+-------+-------|
-   * |   [   |   1   |   2   |   3   |   4   |   5   |       |                    |       |   6   |   7   |   8   |   9   |   0   |   ]   |
+   * |  Tab  |   1   |   2   |   3   |   4   |   5   |       |                    |       |   6   |   7   |   8   |   9   |   0   |  F12  |
    * |-------+-------+-------+-------+-------+-------+-------+                    +-------+-------+-------+-------+-------+-------+-------|
-   * | Shift |       |       |       |  Win  |PrntScr|       |                    |       |   ^   |   ¥   |   ,   |   .   |   /   |   \   |
+   * |   [   |       |       |       |  Win  |PrntScr|       |                    |       |   ^   |   ¥   |   ,   |   .   |   /   |   ]   |
    * |-------+-------+-------+-------+-------+-------+-------+-------+    +-------+------ +-------+-------+-------+-------+-------+-------|
-   * |       |       |       |       |       |  Alt  |  Ctrl |Low/Del|    |Raz/Ent|Sft/Spc|       |       |       |       |       |       |
+   * | Shift |       |       |       |       |  Alt  |  Ctrl |Low/Del|    |Raz/Ent| Shift | Space |       |       |       |       |   \   |
    * ,-------------------------------+       +-----------------------+    +-----------------------+       +-------------------------------.
    */
   [_LOWER] = LAYOUT(
-    KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,                      KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   \
-    KC_ESC,  JP_EXLM, JP_DQUO, JP_HASH, JP_DLR,  JP_PERC, KC_NO,                      KC_NO,   JP_AMPR, JP_QUOT, JP_LPRN, JP_RPRN, JP_AT,   S(JP_MINS), \
-    JP_LBRC, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_NO,                      KC_NO,   KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    JP_RBRC, \
-    KC_LSFT, KC_NO,   KC_NO,   KC_NO,   KC_LGUI, KC_PSCR, KC_NO,                      KC_NO,   JP_CIRC, JP_YEN,  JP_COMM, JP_DOT,  JP_SLSH, JP_BSLS, \
-    KC_NO,   KC_NO,   KC_NO,   KC_NO,            KC_LALT, KC_LCTL, LT_DEL,    RT_ENT, ST_SPC,  KC_NO,            KC_NO,   KC_NO,   KC_NO,   KC_NO    \
+    KC_NO,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_NO,                      KC_NO,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_NO,  \
+    KC_ESC,  JP_EXLM, JP_DQUO, JP_HASH, JP_DLR,  JP_PERC, KC_NO,                      KC_NO,   JP_AMPR, JP_QUOT, JP_LPRN, JP_RPRN, JP_AT,   KC_F11, \
+    KC_TAB,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_NO,                      KC_NO,   KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_F12, \
+    JP_LBRC, KC_NO,   KC_NO,   KC_NO,   KC_LGUI, KC_PSCR, KC_NO,                      KC_NO,   JP_CIRC, JP_YEN,  JP_COMM, JP_DOT,  JP_SLSH, KC_NO,  \
+    KC_LSFT, KC_NO,   KC_NO,   KC_NO,            KC_LALT, KC_LCTL, LT_DEL,    RT_ENT, KC_RSFT, KC_SPC,           KC_NO,   KC_NO,   KC_NO,   JP_BSLS \
   ),
 
   /* Raise
    * ,--------------------------------------------------------                    --------------------------------------------------------.
-   * |       |       |       |       |       |       |       |                    |       |       |       |       |       |       |       |
+   * |       |   F1  |   F2  |   F3  |   F4  |   F5  |       |                    |       |   F6  |   F7  |   F8  |   F9  |  F10  |       |
    * |-------+-------+-------+-------+-------+-------+-------+                    +-------+-------+-------+-------+-------+-------+-------|
-   * |  ESC  |   !   |   "   |   #   |   $   |   %   |       |                    |       |   &   |   '   |   (   |   )   |   @   |   =   |
+   * |  ESC  |   !   |   "   |   #   |   $   |   %   |       |                    |       |   &   |   '   |   (   |   )   |   @   |  F11  |
    * |-------+-------+-------+-------+-------+-------+-------+                    +-------+-------+-------+-------+-------+-------+-------|
-   * |   {   |   1   |   2   |   3   |   4   |   5   |       |                    |       |  F12  |  Left |  Down |   Up  | Right |   }   |
+   * |  Tab  |   1   |   2   |   3   |   4   |   5   |       |                    |       |   6   |  Left |   Up  |  Down | Right |  F12  |
    * |-------+-------+-------+-------+-------+-------+-------+                    +-------+-------+-------+-------+-------+-------+-------|
-   * | Shift |   F1  |   F2  |   F3  |   F4  |   F5  |       |                    |       |   F6  |   F7  |   F8  |   F9  |  F10  |  F11  |
+   * |   [   |       |       |       |  Win  |PrntScr|       |                    |       |   ^   |   ¥   |   ,   |   .   |   /   |   ]   |
    * |-------+-------+-------+-------+-------+-------+-------+-------+    +-------+------ +-------+-------+-------+-------+-------+-------|
-   * |       |       |       |       |       |  Alt  |  Ctrl |Low/Del|    |Raz/Ent|Sft/Spc|       |       |       |       |       |       |
+   * | Shift |       |       |       |       |  Alt  |  Ctrl |Low/Del|    |Raz/Ent| Shift | Space |       |       |       |       |   \   |
    * ,-------------------------------+       +-----------------------+    +-----------------------+       +-------------------------------.
    */
   [_RAISE] = LAYOUT(
-    KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,                      KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   \
-    KC_ESC,  JP_EXLM, JP_DQUO, JP_HASH, JP_DLR,  JP_PERC, KC_NO,                      KC_NO,   JP_AMPR, JP_QUOT, JP_LPRN, JP_RPRN, JP_AT,   S(JP_MINS), \
-    S(JP_LBRC),KC_1,  KC_2,    KC_3,    KC_4,    KC_5,    KC_NO,                      KC_NO,   KC_F12,  KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, S(JP_RBRC), \
-    KC_LSFT, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_NO,                      KC_NO,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  \
-    KC_NO,   KC_NO,   KC_NO,   KC_NO,            KC_LALT, KC_LCTL, LT_DEL,    RT_ENT, ST_SPC,  KC_NO,            KC_NO,   KC_NO,   KC_NO,   KC_NO    \
+    KC_NO,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_NO,                      KC_NO,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_NO,  \
+    KC_ESC,  JP_EXLM, JP_DQUO, JP_HASH, JP_DLR,  JP_PERC, KC_NO,                      KC_NO,   JP_AMPR, JP_QUOT, JP_LPRN, JP_RPRN, JP_AT,   KC_F11, \
+    KC_TAB,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_NO,                      KC_NO,   KC_6,    KC_LEFT, KC_UP,   KC_DOWN, KC_RGHT, KC_F12, \
+    JP_LBRC, KC_NO,   KC_NO,   KC_NO,   KC_LGUI, KC_PSCR, KC_NO,                      KC_NO,   JP_CIRC, JP_YEN,  JP_COMM, JP_DOT,  JP_SLSH, KC_NO,  \
+    KC_LSFT, KC_NO,   KC_NO,   KC_NO,            KC_LALT, KC_LCTL, LT_DEL,    RT_ENT, KC_RSFT, KC_SPC,           KC_NO,   KC_NO,   KC_NO,   JP_BSLS \
   ),
 
   /* Adjust
