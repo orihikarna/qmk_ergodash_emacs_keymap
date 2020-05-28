@@ -20,6 +20,12 @@
 #define MOD_CS (MOD_C|MOD_S)
 #define MOD_SM (MOD_S|MOD_M)
 
+// any modifiers (use right keycodes)
+#define ANY_C MOD_BIT(KC_RCTL)
+#define ANY_S MOD_BIT(KC_RSFT)
+#define ANY_M MOD_BIT(KC_RALT)
+#define ANY_G MOD_BIG(KC_RGUI)
+
 // emacs mode type (use right keycodes)
 #define MOD_TABLE MOD_BIT(KC_RCTL)
 #define MOD_MACRO MOD_BIT(KC_RSFT)
@@ -27,13 +33,13 @@
 
 // declarations
 typedef struct {
-    uint8_t src_mods;
+    uint8_t src_mods;// L: pressed, R: any
     uint8_t src_code;
     uint8_t dest_mods; // mapped mods, or mapped mode (macro, function)
     uint8_t dest_code;
 } SMapEntry;
 
-#define MAP_ENTRY_SIZE sizeof( SMapEntry )
+#define MAP_ENTRY_SIZE 4
 
 typedef void (*map_table_on_enter_func_t)( void );
 typedef void (*map_table_on_search_func_t)( uint8_t entry_index );
@@ -94,65 +100,64 @@ static const uint16_t* macro_seqs[] = {
 
 // mapping tables
 static const uint8_t map_table_none[][MAP_ENTRY_SIZE] = {
-    { MOD_C,    KC_Q,    MOD_TABLE, MAP_TABLE_INDEX_DEFAULT },
+    { MOD_C         , KC_Q,    MOD_TABLE, MAP_TABLE_INDEX_DEFAULT },
 };
 #define MAP_COUNT_NONE (sizeof( map_table_none ) / sizeof( map_table_none[0] ))
 
 static const uint8_t map_table_default[][MAP_ENTRY_SIZE] = {
-    { MOD_C,    KC_Q,    MOD_TABLE, MAP_TABLE_INDEX_NONE },
-    { MOD_C,    KC_X,    MOD_TABLE, MAP_TABLE_INDEX_CXPREFIX },
-    { MOD_C,    KC_SPC,  MOD_TABLE, MAP_TABLE_INDEX_MARKSEL },
-    { MOD_C,    KC_G,    0,         KC_ESC  },// Esc
-    { MOD_C,    KC_M,    0,         KC_ENT  },// Enter
-    { MOD_C,    KC_A,    0,         KC_HOME },// Home
-    { MOD_C,    KC_E,    0,         KC_END  },// End
-    { MOD_C,    KC_F,    0,         KC_RGHT },// Right
-    { MOD_C,    KC_B,    0,         KC_LEFT },// Left
-    { MOD_C,    KC_P,    0,         KC_UP   },// Up
-    { MOD_C,    KC_N,    0,         KC_DOWN },// Down
-    { MOD_CS,   KC_V,    0,         KC_PGUP },// Page Up
-    { MOD_C,    KC_V,    0,         KC_PGDN },// Page Down
-    { MOD_M,    KC_F,    MOD_C,     KC_RGHT },// next word
-    { MOD_M,    KC_B,    MOD_C,     KC_LEFT },// prev word
-    { MOD_C,    KC_D,    0,         KC_DEL  },// Del
-    { MOD_C,    KC_H,    0,         KC_BSPC },// BS
-    { MOD_C,    KC_S,    MOD_C,     KC_F    },// search (find)
+    { MOD_C         , KC_Q,    MOD_TABLE, MAP_TABLE_INDEX_NONE },
+    { MOD_C         , KC_X,    MOD_TABLE, MAP_TABLE_INDEX_CXPREFIX },
+    { MOD_C         , KC_SPC,  MOD_TABLE, MAP_TABLE_INDEX_MARKSEL },
+    { MOD_C         , KC_G,    0,         KC_ESC  },// Esc
+    { MOD_C         , KC_M,    0,         KC_ENT  },// Enter
+    { MOD_C         , KC_A,    0,         KC_HOME },// Home
+    { MOD_C         , KC_E,    0,         KC_END  },// End
+    { MOD_C         , KC_F,    0,         KC_RGHT },// Right
+    { MOD_C         , KC_B,    0,         KC_LEFT },// Left
+    { MOD_C         , KC_P,    0,         KC_UP   },// Up
+    { MOD_C         , KC_N,    0,         KC_DOWN },// Down
+    { MOD_CS        , KC_V,    0,         KC_PGUP },// Page Up
+    { MOD_C         , KC_V,    0,         KC_PGDN },// Page Down
+    { MOD_M         , KC_F,    MOD_C,     KC_RGHT },// next word
+    { MOD_M         , KC_B,    MOD_C,     KC_LEFT },// prev word
+    { MOD_C | ANY_S , KC_D,    0,         KC_DEL  },// Del
+    { MOD_C         , KC_H,    0,         KC_BSPC },// BS
+    { MOD_C         , KC_S,    MOD_C,     KC_F    },// search (find)
     // macros
-    { MOD_C,    KC_O,    MOD_MACRO, EMM_OpenLine },
-    { MOD_C,    KC_K,    MOD_MACRO, EMM_KillLine },
-    { MOD_C,    KC_T,    MOD_MACRO, EMM_SwapChars },
-    { MOD_M,    KC_D,    MOD_MACRO, EMM_KillWord },
-    { MOD_C,    KC_I,    0,         KC_TAB  },// Tab
-    { MOD_CS,   KC_I,    MOD_S,     KC_TAB  },// S-Tab
-    { MOD_C,    KC_W,    MOD_C,     KC_X    },// cut
-    { MOD_M,    KC_W,    MOD_C,     KC_C    },// copy
-    { MOD_C,    KC_Y,    MOD_C,     KC_V    },// paste
-    { MOD_M,    KC_Y,    MOD_C,     KC_Y    },// redo
-    { MOD_SM,   UKC_COMM,MOD_C,     KC_HOME },// top
-    { MOD_SM,   UKC_DOT, MOD_C,     KC_END  },// bottom
+    { MOD_C         , KC_O,    MOD_MACRO, EMM_OpenLine },
+    { MOD_C         , KC_K,    MOD_MACRO, EMM_KillLine },
+    { MOD_C         , KC_T,    MOD_MACRO, EMM_SwapChars },
+    { MOD_M         , KC_D,    MOD_MACRO, EMM_KillWord },
+    { MOD_C | ANY_S , KC_I,    0,         KC_TAB  },// Tab
+    { MOD_C         , KC_W,    MOD_C,     KC_X    },// cut
+    { MOD_M         , KC_W,    MOD_C,     KC_C    },// copy
+    { MOD_C         , KC_Y,    MOD_C,     KC_V    },// paste
+    { MOD_M         , KC_Y,    MOD_C,     KC_Y    },// redo
+    { MOD_SM        , UKC_COMM,MOD_C,     KC_HOME },// top
+    { MOD_SM        , UKC_DOT, MOD_C,     KC_END  },// bottom
     // mac style
-    { MOD_M,    KC_Z,    MOD_C,     KC_Z },// undo
-    { MOD_M,    KC_X,    MOD_C,     KC_X },// cut
-    { MOD_M,    KC_C,    MOD_C,     KC_C },// copy
-    { MOD_M,    KC_V,    MOD_C,     KC_V },// paste
-    { MOD_M,    KC_A,    MOD_C,     KC_A },// All
-    { MOD_M,    KC_S,    MOD_C,     KC_S },// save
-    { MOD_SM,   KC_Z,    MOD_C,     KC_Y },// redo
-    { MOD_M,    KC_N,    MOD_C,     KC_N },// new
-    { MOD_M,    KC_O,    MOD_C,     KC_O },// open
+    { MOD_M         , KC_Z,    MOD_C,     KC_Z    },// undo
+    { MOD_M         , KC_X,    MOD_C,     KC_X    },// cut
+    { MOD_M         , KC_C,    MOD_C,     KC_C    },// copy
+    { MOD_M         , KC_V,    MOD_C,     KC_V    },// paste
+    { MOD_M         , KC_A,    MOD_C,     KC_A    },// All
+    { MOD_M         , KC_S,    MOD_C,     KC_S    },// save
+    { MOD_SM        , KC_Z,    MOD_C,     KC_Y    },// redo
+    { MOD_M         , KC_N,    MOD_C,     KC_N    },// new
+    { MOD_M         , KC_O,    MOD_C,     KC_O    },// open
 #ifdef USE_JP
-    { MOD_C,    JP_SCLN, 0,         JP_ZKHK },// IME
+    { MOD_C         , JP_SCLN, 0,         JP_ZKHK },// IME
 #endif
 };
 #define MAP_COUNT_DEFAULT (sizeof( map_table_default ) / sizeof( map_table_default[0] ))
 
 const uint8_t map_table_cxprefix[][MAP_ENTRY_SIZE] = {
-    { MOD_C,    KC_Q,    MOD_TABLE, MAP_TABLE_INDEX_NONE },
-    { MOD_C,    KC_S,    MOD_C,     KC_S },// save
-    { MOD_C,    KC_F,    MOD_C,     KC_O },// open
-    { MOD_C,    KC_C,    MOD_M,     KC_F4 },// close
-    { 0,        KC_U,    MOD_C,     KC_Z },// undo
-    { 0,        KC_H,    MOD_C,     KC_A },// All
+    { MOD_C         , KC_Q,    MOD_TABLE, MAP_TABLE_INDEX_NONE },
+    { MOD_C         , KC_S,    MOD_C,     KC_S    },// save
+    { MOD_C         , KC_F,    MOD_C,     KC_O    },// open
+    { MOD_C         , KC_C,    MOD_M,     KC_F4   },// close
+    { 0             , KC_U,    MOD_C,     KC_Z    },// undo
+    { 0             , KC_H,    MOD_C,     KC_A    },// All
 };
 #define MAP_COUNT_CXPREFIX (sizeof( map_table_cxprefix ) / sizeof( map_table_cxprefix[0] ))
 
@@ -161,26 +166,26 @@ static void map_table_cxcprefix_on_search( uint8_t index ) {
 }
 
 const uint8_t map_table_marksel[][MAP_ENTRY_SIZE] = {
-    { MOD_C,    KC_Q,    MOD_TABLE, MAP_TABLE_INDEX_NONE },
-    { MOD_C,    KC_G,    MOD_MACRO, EMM_MarkCancel },
-    { MOD_C,    KC_W,    MOD_MACRO, EMM_MarkCut },// cut
-    { MOD_M,    KC_W,    MOD_MACRO, EMM_MarkCopy },// copy
-    { MOD_C,    KC_A,    MOD_S,     KC_HOME },
-    { MOD_C,    KC_E,    MOD_S,     KC_END },
-    { MOD_C,    KC_F,    MOD_S,     KC_RGHT },
-    { MOD_C,    KC_B,    MOD_S,     KC_LEFT },
-    { MOD_C,    KC_P,    MOD_S,     KC_UP },
-    { MOD_C,    KC_N,    MOD_S,     KC_DOWN },
-    { MOD_CS,   KC_V,    MOD_S,     KC_PGUP },
-    { MOD_C,    KC_V,    MOD_S,     KC_PGDN },
-    { MOD_M,    KC_F,    MOD_CS,    KC_RGHT },// next word
-    { MOD_M,    KC_B,    MOD_CS,    KC_LEFT },// prev word
-    { MOD_SM,   UKC_COMM,MOD_CS,    KC_HOME },
-    { MOD_SM,   UKC_DOT, MOD_CS,    KC_END },
-    { 0,        KC_LEFT, MOD_S,     KC_LEFT },
-    { 0,        KC_RGHT, MOD_S,     KC_RGHT },
-    { 0,        KC_UP,   MOD_S,     KC_UP },
-    { 0,        KC_DOWN, MOD_S,     KC_DOWN },
+    { MOD_C         , KC_Q,    MOD_TABLE, MAP_TABLE_INDEX_NONE },
+    { MOD_C         , KC_G,    MOD_MACRO, EMM_MarkCancel },
+    { MOD_C         , KC_W,    MOD_MACRO, EMM_MarkCut },// cut
+    { MOD_M         , KC_W,    MOD_MACRO, EMM_MarkCopy },// copy
+    { MOD_C         , KC_A,    MOD_S,     KC_HOME },
+    { MOD_C         , KC_E,    MOD_S,     KC_END  },
+    { MOD_C         , KC_F,    MOD_S,     KC_RGHT },
+    { MOD_C         , KC_B,    MOD_S,     KC_LEFT },
+    { MOD_C         , KC_P,    MOD_S,     KC_UP   },
+    { MOD_C         , KC_N,    MOD_S,     KC_DOWN },
+    { MOD_CS        , KC_V,    MOD_S,     KC_PGUP },
+    { MOD_C         , KC_V,    MOD_S,     KC_PGDN },
+    { MOD_M         , KC_F,    MOD_CS,    KC_RGHT },// next word
+    { MOD_M         , KC_B,    MOD_CS,    KC_LEFT },// prev word
+    { MOD_SM        , UKC_COMM,MOD_CS,    KC_HOME },
+    { MOD_SM        , UKC_DOT, MOD_CS,    KC_END  },
+    { 0             , KC_LEFT, MOD_S,     KC_LEFT },
+    { 0             , KC_RGHT, MOD_S,     KC_RGHT },
+    { 0             , KC_UP,   MOD_S,     KC_UP   },
+    { 0             , KC_DOWN, MOD_S,     KC_DOWN },
 };
 #define MAP_COUNT_MARKSEL (sizeof( map_table_marksel ) / sizeof( map_table_marksel[0] ))
 
@@ -204,9 +209,12 @@ static SMapTable map_tables[MAP_TABLE_COUNT] = {
 
 
 // mapping functions
-static bool match_mods2( uint8_t pressed, uint8_t mods ) {
+static bool match_mods2( uint8_t pressed, uint8_t mods, uint8_t* any_mods ) {
     pressed = (pressed | (pressed >> 4)) & 0x07;
-    return (pressed == mods);
+    const uint8_t req = mods & 0x0f;
+    const uint8_t any = (mods >> 4) & 0x0f;
+    *any_mods = pressed & any;
+    return ((pressed & ~any) == (req & ~any));
 }
 
 static void register_mods2( uint8_t mods ) {
@@ -278,6 +286,7 @@ static void map_key( uint8_t mods, uint8_t keycode ) {
 
 // the processor function
 bool process_record_emacs( uint16_t keycode, keyrecord_t* record ) {
+    _Static_assert( sizeof( SMapEntry ) == MAP_ENTRY_SIZE, "sizeof( SMapEntry ) != MAP_ENTRY_SIZE" );
     if (IS_MOD( keycode )) {
         // keep tracking the mod key state
         if (record->event.pressed) {
@@ -304,9 +313,10 @@ bool process_record_emacs( uint16_t keycode, keyrecord_t* record ) {
                 uint8_t index;
                 for (index = 0; index < num_entries; ++index) {
                     const SMapEntry* map = (const SMapEntry*) map_table->m_table[index];
-                    if (match_mods2( pressed_mods, map->src_mods ) && keycode == map->src_code) {// found!
+                    uint8_t any_mods = 0;
+                    if (keycode == map->src_code && match_mods2( pressed_mods, map->src_mods, &any_mods )) {// found!
                         pressed_keycode = keycode;
-                        map_key( map->dest_mods, map->dest_code );
+                        map_key( map->dest_mods | any_mods, map->dest_code );
                         mapped = true;
                         break;
                     }
