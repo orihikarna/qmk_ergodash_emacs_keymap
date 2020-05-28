@@ -25,6 +25,7 @@
 #define ANY_S MOD_BIT(KC_RSFT)
 #define ANY_M MOD_BIT(KC_RALT)
 #define ANY_G MOD_BIG(KC_RGUI)
+#define ANY_SM (ANY_S|ANY_M)
 
 // emacs mode type (use right keycodes)
 #define MOD_TABLE MOD_BIT(KC_RCTL)
@@ -109,17 +110,17 @@ static const uint8_t map_table_default[][MAP_ENTRY_SIZE] = {
     { MOD_C         , KC_X,    MOD_TABLE, MAP_TABLE_INDEX_CXPREFIX },
     { MOD_C         , KC_SPC,  MOD_TABLE, MAP_TABLE_INDEX_MARKSEL },
     { MOD_C         , KC_G,    0,         KC_ESC  },// Esc
-    { MOD_C         , KC_M,    0,         KC_ENT  },// Enter
-    { MOD_C         , KC_A,    0,         KC_HOME },// Home
-    { MOD_C         , KC_E,    0,         KC_END  },// End
-    { MOD_C         , KC_F,    0,         KC_RGHT },// Right
-    { MOD_C         , KC_B,    0,         KC_LEFT },// Left
-    { MOD_C         , KC_P,    0,         KC_UP   },// Up
-    { MOD_C         , KC_N,    0,         KC_DOWN },// Down
-    { MOD_CS        , KC_V,    0,         KC_PGUP },// Page Up
-    { MOD_C         , KC_V,    0,         KC_PGDN },// Page Down
-    { MOD_M         , KC_F,    MOD_C,     KC_RGHT },// next word
-    { MOD_M         , KC_B,    MOD_C,     KC_LEFT },// prev word
+    { MOD_C | ANY_SM, KC_M,    0,         KC_ENT  },// Enter
+    { MOD_C | ANY_SM, KC_A,    0,         KC_HOME },// Home
+    { MOD_C | ANY_SM, KC_E,    0,         KC_END  },// End
+    { MOD_C | ANY_SM, KC_F,    0,         KC_RGHT },// Right
+    { MOD_C | ANY_SM, KC_B,    0,         KC_LEFT },// Left
+    { MOD_C | ANY_SM, KC_P,    0,         KC_UP   },// Up
+    { MOD_C | ANY_SM, KC_N,    0,         KC_DOWN },// Down
+    { MOD_CS | ANY_M, KC_V,    0,         KC_PGUP },// Page Up
+    { MOD_C  | ANY_M, KC_V,    0,         KC_PGDN },// Page Down
+    { MOD_M | ANY_S , KC_F,    MOD_C,     KC_RGHT },// next word
+    { MOD_M | ANY_S , KC_B,    MOD_C,     KC_LEFT },// prev word
     { MOD_C | ANY_S , KC_D,    0,         KC_DEL  },// Del
     { MOD_C         , KC_H,    0,         KC_BSPC },// BS
     { MOD_C         , KC_S,    MOD_C,     KC_F    },// search (find)
@@ -145,6 +146,17 @@ static const uint8_t map_table_default[][MAP_ENTRY_SIZE] = {
     { MOD_SM        , KC_Z,    MOD_C,     KC_Y    },// redo
     { MOD_M         , KC_N,    MOD_C,     KC_N    },// new
     { MOD_M         , KC_O,    MOD_C,     KC_O    },// open
+    //  Ctrl+Num=Fn
+    { MOD_C | ANY_SM, KC_1,    0,         KC_F1   },// F1
+    { MOD_C | ANY_SM, KC_2,    0,         KC_F2   },// F2
+    { MOD_C | ANY_SM, KC_3,    0,         KC_F3   },// F3
+    { MOD_C | ANY_SM, KC_4,    0,         KC_F4   },// F4
+    { MOD_C | ANY_SM, KC_5,    0,         KC_F5   },// F5
+    { MOD_C | ANY_SM, KC_6,    0,         KC_F6   },// F6
+    { MOD_C | ANY_SM, KC_7,    0,         KC_F7   },// F7
+    { MOD_C | ANY_SM, KC_8,    0,         KC_F8   },// F8
+    { MOD_C | ANY_SM, KC_9,    0,         KC_F9   },// F9
+    { MOD_C | ANY_SM, KC_0,    0,         KC_F10  },// F10
 #ifdef USE_JP
     { MOD_C         , JP_SCLN, 0,         JP_ZKHK },// IME
 #endif

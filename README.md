@@ -68,31 +68,31 @@ SRC += process_emacs.c
 | C-x  |   | C-x prefix key  |
 | C-' '|   | Enter mark selection  |
 | C-g  | Esc  | Cancel  |
-| C-m  | Enter  | Enter  |
-| C-a  | Home  | Beginning  |
-| C-e  | End  | End  |
-| C-f  | ->  | Right  |
-| C-b  | <-  | Left  |
-| C-p  | ^  | Up  |
-| C-n  | v  | Down  |
-| CS-v  | PageUp  | Page up  |
-| C-v  | PageDown  | Page down  |
-| M-f  | C-'->'  | Next word  |
-| M-b  | C-'<-'  | Previous word  |
-| C-d  | Del  | Delete  |
+| C-*S-*M-m  | Enter  | Enter  |
+| C-*S-*M-a  | Home  | Beginning  |
+| C-*S-*M-e  | End  | End  |
+| C-*S-*M-f  | ->  | Right  |
+| C-*S-*M-b  | <-  | Left  |
+| C-*S-*M-p  | ^  | Up  |
+| C-*S-*M-n  | v  | Down  |
+| C-S-*M-v  | PageUp  | Page up  |
+| C-*M-v  | PageDown  | Page down  |
+| M-*S-f  | C-'->'  | Next word  |
+| M-*S-b  | C-'<-'  | Previous word  |
+| C-*S-d  | Del  | Delete  |
 | C-h  | BS  | Backspace  |
 | C-s  | C-f  | Forward search -> Find  |
 | C-o  | Ent, Up, End  | Open line  |
 | C-k  | S-End, C-x  | Kill line  |
 | C-t  | S-Right, C-x, Left, C-v, Right  | Swap chars  |
 | M-d  | CS-Right, C-x  | Kill word  |
-| C-i  | Tab  | Tab  |
+| C-*S-i  | Tab  | Tab  |
 | C-w  | C-x  | Cut  |
 | M-w  | C-c  | Copy  |
 | C-y  | C-v  | Paste  |
 | M-y  | C-y  | Redo  |
-| SM-,  | C-Home  | Top  |
-| SM-.  | C-End  | Bottom  |
+| S-M-,  | C-Home  | Top  |
+| S-M-.  | C-End  | Bottom  |
 
 In addition, here are defined MacOS style shortcuts although these are not Emacsen.
 
@@ -113,6 +113,20 @@ And finally, toggle Japanese IME (when `USE_JP` is defined).
 | Input  | Translation  | Description  |
 |---|---|---|
 | C-;  | 全角半角  | Toggle Japanese IME  |
+
+Extra : function keys
+| Input  | Translation  |
+|---|---|
+| C-*S-*M-1  | F1  |
+| C-*S-*M-2  | F2  |
+| C-*S-*M-3  | F3  |
+| C-*S-*M-4  | F4  |
+| C-*S-*M-5  | F5  |
+| C-*S-*M-6  | F6  |
+| C-*S-*M-7  | F7  |
+| C-*S-*M-8  | F8  |
+| C-*S-*M-9  | F9  |
+| C-*S-*M-10  | F10  |
 
 
 ### C-x prefix mode
