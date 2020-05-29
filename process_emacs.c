@@ -117,8 +117,8 @@ static const uint8_t map_table_default[][MAP_ENTRY_SIZE] = {
     { MOD_C | ANY_SM, KC_B,    0,         KC_LEFT },// Left
     { MOD_C | ANY_SM, KC_P,    0,         KC_UP   },// Up
     { MOD_C | ANY_SM, KC_N,    0,         KC_DOWN },// Down
-    { MOD_CS | ANY_M, KC_V,    0,         KC_PGUP },// Page Up
-    { MOD_C  | ANY_M, KC_V,    0,         KC_PGDN },// Page Down
+    { MOD_C | ANY_SM, KC_R,    0,         KC_PGUP },// Page Up
+    { MOD_C | ANY_SM, KC_V,    0,         KC_PGDN },// Page Down
     { MOD_M | ANY_S , KC_F,    MOD_C,     KC_RGHT },// next word
     { MOD_M | ANY_S , KC_B,    MOD_C,     KC_LEFT },// prev word
     { MOD_C | ANY_S , KC_D,    0,         KC_DEL  },// Del

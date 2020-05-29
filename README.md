@@ -75,8 +75,8 @@ SRC += process_emacs.c
 | C-*S-*M-b  | <-  | Left  |
 | C-*S-*M-p  | ^  | Up  |
 | C-*S-*M-n  | v  | Down  |
-| C-S-*M-v  | PageUp  | Page up  |
-| C-*M-v  | PageDown  | Page down  |
+| C-*S-*M-r  | PageUp  | Page up  |
+| C-*S-*M-v  | PageDown  | Page down  |
 | M-*S-f  | C-'->'  | Next word  |
 | M-*S-b  | C-'<-'  | Previous word  |
 | C-*S-d  | Del  | Delete  |
