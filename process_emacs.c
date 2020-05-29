@@ -77,6 +77,7 @@ static uint8_t pressed_mods = 0;
 static uint8_t pressed_keycode = KC_NO;
 static uint8_t mapped_mods = 0;
 static uint8_t mapped_keycode = KC_NO;
+static bool is_single_alt_tap = false;
 
 
 // macro definitions
@@ -299,6 +300,9 @@ static void map_key( uint8_t mods, uint8_t keycode ) {
 // the processor function
 bool process_record_emacs( uint16_t keycode, keyrecord_t* record ) {
     _Static_assert( sizeof( SMapEntry ) == MAP_ENTRY_SIZE, "sizeof( SMapEntry ) != MAP_ENTRY_SIZE" );
+    if (is_single_alt_tap && (keycode != KC_LALT && keycode != KC_RALT)) {
+        is_single_alt_tap = false;
+    }
     if (IS_MOD( keycode )) {
         // keep tracking the mod key state
         if (record->event.pressed) {
@@ -308,11 +312,19 @@ bool process_record_emacs( uint16_t keycode, keyrecord_t* record ) {
                     register_code( KC_LCTL );
                     register_code( keycode );
                     unregister_code( KC_LCTL );
+                    is_single_alt_tap = true;
                     return false;
                 }
             }
         } else {
             pressed_mods &= ~MOD_BIT( keycode );
+            if (is_single_alt_tap && (keycode == KC_LALT || keycode == KC_RALT)) {// activate ALT menu
+                is_single_alt_tap = false;
+                unregister_code( keycode );
+                register_code( keycode );
+                unregister_code( keycode );
+                return false;
+            }
         }
         return !unmap_key();
     } else if (IS_KEY( keycode )) {
