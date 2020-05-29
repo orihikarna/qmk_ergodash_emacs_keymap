@@ -12,9 +12,9 @@ enum custom_keycodes {
     RAISE,
     // for mytap_t
     LT_ESC,
-    RT_SPC,
+    RT_ENT,
     AT_DEL,
-    ST_ENT,
+    ST_SPC,
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -29,7 +29,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    * |-------+-------+-------+-------+-------+-------+-------+                    +-------+-------+-------+-------+-------+-------+-------|
    * | Shift |   Z   |   X   |   C   |   V   |   B   |       |                    |       |   N   |   M   |   ,   |   .   |  / >  |  \ _  |
    * |-------+-------+-------+-------+-------+-------+-------+-------+    +-------+------ +-------+-------+-------+-------+-------+-------|
-   * |  ^ ~  |       |       |       |       |Alt/Del|  Ctrl |       |    |       |Sft/Ent|Raz/Spc|       |       |       |       |  ¥ |  |
+   * |  ^ ~  |       |       |       |       |Alt/Del|  Ctrl |       |    |       |Sft/Spc|Raz/Ent|       |       |       |       |  ¥ |  |
    * ,-------------------------------+       +-----------------------+    +-----------------------+       +-------------------------------.
    */
   [_QWERTY] = LAYOUT( \
@@ -37,7 +37,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     LT_ESC,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_NO,                      KC_NO,   KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    JP_MINS, \
     KC_TAB,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    JP_LBRC,                    JP_RBRC, KC_H,    KC_J,    KC_K,    KC_L,    JP_SCLN, JP_COLN, \
     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_NO,                      KC_NO,   KC_N,    KC_M,    JP_COMM, JP_DOT,  JP_SLSH, JP_BSLS, \
-    JP_CIRC, KC_NO,   KC_NO,   KC_NO,            AT_DEL,  KC_LCTL, KC_NO,    KC_NO,   ST_ENT,  RT_SPC,           KC_NO,   KC_NO,   KC_NO,   JP_YEN   \
+    JP_CIRC, KC_NO,   KC_NO,   KC_NO,            AT_DEL,  KC_LCTL, KC_NO,    KC_NO,   ST_SPC,  RT_ENT,           KC_NO,   KC_NO,   KC_NO,   JP_YEN   \
   ),
 
   /* Raise
@@ -50,7 +50,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    * |-------+-------+-------+-------+-------+-------+-------+                    +-------+-------+-------+-------+-------+-------+-------|
    * | Shift |  Home | PageUp| PageDn|  End  |  F11  |       |                    |       |  F12  |  Left |   Up  |  Down | Right |   _   |
    * |-------+-------+-------+-------+-------+-------+-------+-------+    +-------+------ +-------+-------+-------+-------+-------+-------|
-   * |   ~   |       |       |       |       |Alt/Del|  Ctrl |       |    |       |Sft/Ent|Raz/Spc|       |       |       |       |   |   |
+   * |   ~   |       |       |       |       |Alt/Del|  Ctrl |       |    |       |Sft/Spc|Raz/Ent|       |       |       |       |   |   |
    * ,-------------------------------+       +-----------------------+    +-----------------------+       +-------------------------------.
    */
   [_RAISE] = LAYOUT(
@@ -58,7 +58,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     LT_ESC,  JP_EXLM, JP_DQUO, JP_HASH, JP_DLR,  JP_PERC, KC_NO,                      KC_NO,   JP_AMPR, JP_QUOT, JP_LPRN, JP_RPRN, JP_AT,   S(JP_MINS), \
     KC_TAB,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    S(JP_LBRC),                 S(JP_RBRC),KC_6,  KC_7,    KC_8,    KC_9,    KC_0,    S(JP_COLN), \
     KC_LSFT, KC_HOME, KC_PGUP, KC_PGDN, KC_END,  KC_F11,  KC_NO,                      KC_NO,   KC_F12,  KC_LEFT, KC_UP,   KC_DOWN, KC_RGHT, S(JP_BSLS), \
-    S(JP_CIRC),KC_NO, KC_NO,   KC_NO,            AT_DEL,  KC_LCTL, KC_NO,    KC_NO,   ST_ENT,  RT_SPC,           KC_NO,   KC_NO,   KC_NO,   S(JP_YEN)   \
+    S(JP_CIRC),KC_NO, KC_NO,   KC_NO,            AT_DEL,  KC_LCTL, KC_NO,    KC_NO,   ST_SPC,  RT_ENT,           KC_NO,   KC_NO,   KC_NO,   S(JP_YEN)   \
   ),
 
   /* Lower
@@ -102,9 +102,9 @@ typedef struct {
 
 static mytap_t taps[] = {
     { LT_ESC, LOWER,   KC_ESC,  false, 0 },
-    { RT_SPC, RAISE,   KC_SPC,  false, 0 },
+    { RT_ENT, RAISE,   KC_ENT,  false, 0 },
     { AT_DEL, KC_LALT, KC_DEL,  false, 0 },
-    { ST_ENT, KC_RSFT, KC_ENT,  false, 0 },
+    { ST_SPC, KC_RSFT, KC_SPC,  false, 0 },
 };
 #define MYTAP_COUNT (sizeof( taps) / sizeof( taps[0] ))
 #define MYTAPPING_TERM 500
@@ -176,7 +176,18 @@ static bool process_record_mytap( uint16_t keycode, keyrecord_t* record ) {
     return cont;
 }
 
+static void mytap_clear_state( void ) {
+    for (uint8_t n = 0; n < MYTAP_COUNT; ++n) {
+        mytap_t* tap = &taps[n];
+        tap->pressed = false;
+    }
+}
+
 bool process_record_user( uint16_t keycode, keyrecord_t* record ) {
     if (process_record_mytap( keycode, record ) == false) return false;
-    return _process_record_user( keycode, record );
+    if (_process_record_user( keycode, record ) == false) {
+        mytap_clear_state();
+        return false;
+    }
+    return true;
 }
