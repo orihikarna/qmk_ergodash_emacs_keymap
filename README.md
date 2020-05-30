@@ -61,33 +61,37 @@ SRC += process_emacs.c
 
 ## Supported Emacs key bindings:
 
+In the following tables, '*' means that the modifier key that follows the asterisk will be kept pressed/released during the translation.
+For example, C-m will be translated to Enter as shown in the fifth row of the default mode table. In this case, Shift and Alt will be kept released.
+Likewise, if Alt(Meta) key was pressed at the same time, C-M-m will be translated to M-Enter: Shift will be kept released, and Alt pressed.
+
 ### Default mode
 
 | Input  | Translation  | Description  |
 |---|---|---|
 | C-q  |   | Toggle Emacs mode  |
 | C-x  |   | C-x prefix key  |
-| C-' '|   | Enter mark selection  |
+| C-' ' |   | Enter mark selection mode  |
 | C-g  | Esc  | Cancel  |
-| C-*S-*M-m  | Enter  | Enter  |
-| C-*S-*M-a  | Home  | Beginning  |
-| C-*S-*M-e  | End  | End  |
-| C-*S-*M-f  | ->  | Right  |
-| C-*S-*M-b  | <-  | Left  |
-| C-*S-*M-p  | ^  | Up  |
-| C-*S-*M-n  | v  | Down  |
-| C-*S-*M-r  | PageUp  | Page up  |
-| C-*S-*M-v  | PageDown  | Page down  |
-| M-*S-f  | C-'->'  | Next word  |
-| M-*S-b  | C-'<-'  | Previous word  |
-| C-*S-d  | Del  | Delete  |
+| C-*S-*M-m  | *S-*M-Enter  | Enter  |
+| C-*S-*M-a  | *S-*M-Home  | Beginning  |
+| C-*S-*M-e  | *S-*M-End  | End  |
+| C-*S-*M-f  | *S-*M-->  | Right  |
+| C-*S-*M-b  | *S-*M-<-  | Left  |
+| C-*S-*M-p  | *S-*M-^  | Up  |
+| C-*S-*M-n  | *S-*M-v  | Down  |
+| C-*S-*M-r  | *S-*M-PageUp  | Page up  |
+| C-*S-*M-v  | *S-*M-PageDown  | Page down  |
+| M-*S-f  | *S-C-'->'  | Next word  |
+| M-*S-b  | *S-C-'<-'  | Previous word  |
+| C-*S-d  | *S-Del  | Delete  |
 | C-h  | BS  | Backspace  |
 | C-s  | C-f  | Forward search -> Find  |
 | C-o  | Ent, Up, End  | Open line  |
 | C-k  | S-End, C-x  | Kill line  |
 | C-t  | S-Right, C-x, Left, C-v, Right  | Swap chars  |
 | M-d  | CS-Right, C-x  | Kill word  |
-| C-*S-i  | Tab  | Tab  |
+| C-*S-i  | *S-Tab  | Tab  |
 | C-w  | C-x  | Cut  |
 | M-w  | C-c  | Copy  |
 | C-y  | C-v  | Paste  |
@@ -108,26 +112,25 @@ In addition, here are defined MacOS style shortcuts although these are not Emacs
 | SM-z  | C-y  | Redo  |
 | M-n  | C-n  | New  |
 | M-o  | C-o  | Open  |
-
 And finally, toggle Japanese IME (when `USE_JP` is defined).
 
 | Input  | Translation  | Description  |
 |---|---|---|
 | C-;  | 全角半角  | Toggle Japanese IME  |
 
-Extra : function keys
+Extra : Function keys for convenience.
 | Input  | Translation  |
 |---|---|
-| C-*S-*M-1  | F1  |
-| C-*S-*M-2  | F2  |
-| C-*S-*M-3  | F3  |
-| C-*S-*M-4  | F4  |
-| C-*S-*M-5  | F5  |
-| C-*S-*M-6  | F6  |
-| C-*S-*M-7  | F7  |
-| C-*S-*M-8  | F8  |
-| C-*S-*M-9  | F9  |
-| C-*S-*M-10  | F10  |
+| C-*S-*M-1  | *S-*M-F1  |
+| C-*S-*M-2  | *S-*M-F2  |
+| C-*S-*M-3  | *S-*M-F3  |
+| C-*S-*M-4  | *S-*M-F4  |
+| C-*S-*M-5  | *S-*M-F5  |
+| C-*S-*M-6  | *S-*M-F6  |
+| C-*S-*M-7  | *S-*M-F7  |
+| C-*S-*M-8  | *S-*M-F8  |
+| C-*S-*M-9  | *S-*M-F9  |
+| C-*S-*M-10  | *S-*M-F10  |
 
 
 ### C-x prefix mode
@@ -144,7 +147,7 @@ Extra : function keys
 
 ### Mark selection mode
 
-Backlight is toggled when it is enabled.
+If backlight is enabled by `rules.mk`, the backlight will be toggled to show that this module is in the mark selection mode.
 
 | Input  | Translation  | Description  |
 |---|---|---|
