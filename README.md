@@ -59,7 +59,7 @@ SRC += process_emacs.c
 ```
 
 
-## Supported Emacs key bindings:
+## Supported Emacs key bindings
 
 In the following tables, '*' means that the modifier key that follows the asterisk will be kept pressed/released during the translation.
 For example, C-m will be translated to Enter as shown in the fifth row of the default mode table. In this case, Shift and Alt will be kept released.
@@ -112,6 +112,7 @@ In addition, here are defined MacOS style shortcuts although these are not Emacs
 | SM-z  | C-y  | Redo  |
 | M-n  | C-n  | New  |
 | M-o  | C-o  | Open  |
+
 And finally, toggle Japanese IME (when `USE_JP` is defined).
 
 | Input  | Translation  | Description  |
