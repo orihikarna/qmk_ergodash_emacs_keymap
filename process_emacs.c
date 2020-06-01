@@ -148,16 +148,16 @@ static const uint8_t map_table_default[][MAP_ENTRY_SIZE] = {
     { MOD_M         , KC_N,    MOD_C,     KC_N    },// new
     { MOD_M         , KC_O,    MOD_C,     KC_O    },// open
     //  Ctrl+Num=Fn
-    { MOD_C | ANY_SM, KC_1,    0,         KC_F1   },// F1
-    { MOD_C | ANY_SM, KC_2,    0,         KC_F2   },// F2
-    { MOD_C | ANY_SM, KC_3,    0,         KC_F3   },// F3
-    { MOD_C | ANY_SM, KC_4,    0,         KC_F4   },// F4
-    { MOD_C | ANY_SM, KC_5,    0,         KC_F5   },// F5
-    { MOD_C | ANY_SM, KC_6,    0,         KC_F6   },// F6
-    { MOD_C | ANY_SM, KC_7,    0,         KC_F7   },// F7
-    { MOD_C | ANY_SM, KC_8,    0,         KC_F8   },// F8
-    { MOD_C | ANY_SM, KC_9,    0,         KC_F9   },// F9
-    { MOD_C | ANY_SM, KC_0,    0,         KC_F10  },// F10
+    // { MOD_C | ANY_SM, KC_1,    0,         KC_F1   },// F1
+    // { MOD_C | ANY_SM, KC_2,    0,         KC_F2   },// F2
+    // { MOD_C | ANY_SM, KC_3,    0,         KC_F3   },// F3
+    // { MOD_C | ANY_SM, KC_4,    0,         KC_F4   },// F4
+    // { MOD_C | ANY_SM, KC_5,    0,         KC_F5   },// F5
+    // { MOD_C | ANY_SM, KC_6,    0,         KC_F6   },// F6
+    // { MOD_C | ANY_SM, KC_7,    0,         KC_F7   },// F7
+    // { MOD_C | ANY_SM, KC_8,    0,         KC_F8   },// F8
+    // { MOD_C | ANY_SM, KC_9,    0,         KC_F9   },// F9
+    // { MOD_C | ANY_SM, KC_0,    0,         KC_F10  },// F10
 #ifdef USE_JP
     { MOD_C         , JP_SCLN, 0,         JP_ZKHK },// IME
 #endif

@@ -119,6 +119,7 @@ And finally, toggle Japanese IME (when `USE_JP` is defined).
 |---|---|---|
 | C-;  | 全角半角  | Toggle Japanese IME  |
 
+<!---
 Extra : Function keys for convenience.
 | Input  | Translation  |
 |---|---|
@@ -132,7 +133,7 @@ Extra : Function keys for convenience.
 | C-*S-*M-8  | *S-*M-F8  |
 | C-*S-*M-9  | *S-*M-F9  |
 | C-*S-*M-10  | *S-*M-F10  |
-
+-->
 
 ### C-x prefix mode
 
