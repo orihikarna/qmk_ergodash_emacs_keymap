@@ -57,11 +57,11 @@ SRC += process_emacs.c
 ```
 
 
-## Supported Emacs key bindings
+## List of defined Emacs key bindings
 
 In the following tables, the asterisks '*' mean that the modifier keys that follow them will be kept pressed/released during the translation.
-For example, C-m will be translated to Enter as shown in the fifth row of the default mode table, and '-*S-*M' part means that Shift and Alt keys may be either pressed / released state and the state will be kept during the translation.
-Therefore, if Alt(Meta) key was pressed when C-m was pressed, namely when C-M-m was pressed, this will be translated to M-Enter: Alt will be kept pressed, and Shift released.
+For example, C-m will be translated to Enter as shown in the fifth row of the table below (Default mode), and '-*S-*M' part means that Shift and Alt keys may be either pressed / released state and the state will be kept throught the translation.
+Therefore, if Alt(Meta) key was pressed when C-m was pressed, namely when C-M-m was pressed, this will be translated to M-Enter: Alt will be pressed, and Shift released.
 
 ### Default mode
 
