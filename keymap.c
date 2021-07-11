@@ -21,65 +21,65 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   /* Qwerty
    * ,--------------------------------------------------------                    --------------------------------------------------------.
-   * |       |   1   |   2   |   3   |   4   |   5   |       |                    |       |   6   |   7   |   8   |   9   |   0   |       |
+   * |  ESC  |   1   |   2   |   3   |   4   |   5   |PrntScr|                    |  Win  |   6   |   7   |   8   |   9   |   0   |  BS   |
    * |-------+-------+-------+-------+-------+-------+-------+                    +-------+-------+-------+-------+-------+-------+-------|
-   * |  ESC  |   Q   |   W   |   E   |   R   |   T   |       |                    |       |   Y   |   U   |   I   |   O   |   P   |  - =  |
+   * |  ESC  |   Q   |   W   |   E   |   R   |   T   |  Del  |                    |  Ent  |   Y   |   U   |   I   |   O   |   P   |  - =  |
    * |-------+-------+-------+-------+-------+-------+-------+                    +-------+-------+-------+-------+-------+-------+-------|
-   * | Shift |   A   |   S   |   D   |   F   |   G   |  ^ ~  |                    |  ¥ |  |   H   |   J   |   K   |   L   |  ; +  |  : *  |
+   * |  Tab  |   A   |   S   |   D   |   F   |   G   |   [   |                    |   ]   |   H   |   J   |   K   |   L   |  ; +  |  : *  |
    * |-------+-------+-------+-------+-------+-------+-------+                    +-------+-------+-------+-------+-------+-------+-------|
-   * |  Tab  |   Z   |   X   |   C   |   V   |   B   |       |                    |       |   N   |   M   |   ,   |   .   |  / >  |  \ _  |
+   * | Shift |   Z   |   X   |   C   |   V   |   B   |       |                    |       |   N   |   M   |   ,   |   .   |  / >  |  \ _  |
    * |-------+-------+-------+-------+-------+-------+-------+-------+    +-------+------ +-------+-------+-------+-------+-------+-------|
-   * |       |       |       |       |       |  Alt  |  Ctrl | Lower |    | Raise | Shift | Space |       |       |       |       |       |
+   * |       |       |       |       |       |  Alt  |  Ctrl | Lower |    | Raise | Shift | Space |       |  Left |   Up  |  Down | Right |
    * ,-------------------------------+       +-----------------------+    +-----------------------+       +-------------------------------.
    */
   [_QWERTY] = LAYOUT( \
-    KC_NO,   KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_NO,                      KC_NO,   KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_NO,   \
-    KC_ESC,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_NO,                      KC_NO,   KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    JP_MINS, \
-    KC_LSFT, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    JP_CIRC,                    JP_YEN,  KC_H,    KC_J,    KC_K,    KC_L,    JP_SCLN, JP_COLN, \
-    KC_TAB,  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_NO,                      KC_NO,   KC_N,    KC_M,    JP_COMM, JP_DOT,  JP_SLSH, JP_BSLS, \
-    KC_NO,   KC_NO,   KC_NO,   KC_NO,            KC_LALT, KC_LCTL, LOWER,    RAISE,   KC_RSFT, KC_SPC,           KC_NO,   KC_NO,   KC_NO,   KC_NO    \
+    KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_PSCR,                    KC_LGUI, KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,   \
+    KC_ESC,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_DEL,                     KC_ENT,  KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    JP_MINS, \
+    KC_TAB,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    JP_LBRC,                    JP_RBRC, KC_H,    KC_J,    KC_K,    KC_L,    JP_SCLN, JP_COLN, \
+    KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_NO,                      KC_NO,   KC_N,    KC_M,    JP_COMM, JP_DOT,  JP_SLSH, JP_BSLS, \
+    KC_NO,   KC_NO,   KC_NO,   KC_NO,            KC_LALT, KC_LCTL, LOWER,    RAISE,   KC_RSFT, KC_SPC,           KC_LEFT, KC_UP,   KC_DOWN, KC_RGHT    \
   ),
 
   /* Raise
    * ,--------------------------------------------------------                    --------------------------------------------------------.
-   * |       |   F1  |   F2  |   F3  |   F4  |   F5  |       |                    |       |   F6  |   F7  |   F8  |   F9  |  F10  |       |
+   * |  ESC  |   F1  |   F2  |   F3  |   F4  |   F5  |       |                    |       |   F6  |   F7  |   F8  |   F9  |  F10  |       |
    * |-------+-------+-------+-------+-------+-------+-------+                    +-------+-------+-------+-------+-------+-------+-------|
-   * |PrntScr|   !   |   "   |   #   |   $   |   %   |       |                    |       |   &   |   '   |   (   |   )   |   @   |   =   |
+   * |  ESC  |   !   |   "   |   #   |   $   |   %   |  Del  |                    |       |   &   |   '   |   (   |   )   |   @   |   =   |
    * |-------+-------+-------+-------+-------+-------+-------+                    +-------+-------+-------+-------+-------+-------+-------|
-   * |  Win  |   1   |   2   |   3   |   4   |   5   |  Del  |                    | Enter |   6   |   7   |   8   |   9   |   0   |   [   |
+   * |  Tab  |   1   |   2   |   3   |   4   |   5   |       |                    | Enter |   6   |   7   |   8   |   9   |   0   |  ^ ~  |
    * |-------+-------+-------+-------+-------+-------+-------+                    +-------+-------+-------+-------+-------+-------+-------|
-   * |  Caps |  Home | PageUp| PageDn|  End  |  F11  |       |                    |       |  F12  |  Left |   Up  |  Down | Right |   ]   |
+   * |  Caps |  Home | PageUp| PageDn|  End  |  F11  |       |                    |       |  F12  |  Left |   Up  |  Down | Right |  ¥ |  |
    * |-------+-------+-------+-------+-------+-------+-------+-------+    +-------+------ +-------+-------+-------+-------+-------+-------|
-   * |       |       |       |       |       |  Alt  |  Ctrl | Lower |    | Raise | Shift | Space |       |       |       |       |       |
+   * |       |       |       |       |       |       |       | Lower |    | Raise |       |       |       |       |       |       |       |
    * ,-------------------------------+       +-----------------------+    +-----------------------+       +-------------------------------.
    */
   [_RAISE] = LAYOUT(
-    KC_NO,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_NO,                      KC_NO,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_NO,   \
-    KC_PSCR, JP_EXLM, JP_DQUO, JP_HASH, JP_DLR,  JP_PERC, KC_NO,                      KC_NO,   JP_AMPR, JP_QUOT, JP_LPRN, JP_RPRN, JP_AT,   S(JP_MINS), \
-    KC_LGUI, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_DEL,                     KC_ENT,  KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    JP_LBRC, \
-    KC_CAPS, KC_HOME, KC_PGUP, KC_PGDN, KC_END,  KC_F11,  KC_NO,                      KC_NO,   KC_F12,  KC_LEFT, KC_UP,   KC_DOWN, KC_RGHT, JP_RBRC, \
-    KC_NO,   KC_NO, KC_NO,   KC_NO,            KC_LALT, KC_LCTL, LOWER,      RAISE,   KC_RSFT, KC_SPC,           KC_NO,   KC_NO,   KC_NO,   KC_NO    \
+    _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   _______,                    _______, KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  _______, \
+    _______, JP_EXLM, JP_DQUO, JP_HASH, JP_DLR,  JP_PERC, KC_DEL ,                    _______, JP_AMPR, JP_QUOT, JP_LPRN, JP_RPRN, JP_AT,   S(JP_MINS), \
+    _______, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    _______,                    KC_ENT,  KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    JP_CIRC, \
+    KC_CAPS, KC_HOME, KC_PGUP, KC_PGDN, KC_END,  KC_F11,  KC_NO,                      KC_NO,   KC_F12,  KC_LEFT, KC_UP,   KC_DOWN, KC_RGHT, JP_YEN,  \
+    KC_NO,   KC_NO,   KC_NO,   KC_NO,            _______, _______, LOWER,    RAISE,   _______, _______,          _______, _______, _______, _______  \
   ),
 
   /* Lower
    * ,--------------------------------------------------------                    --------------------------------------------------------.
    * |       |   F1  |   F2  |   F3  |   F4  |   F5  |       |                    |       |   F6  |   F7  |   F8  |   F9  |  F10  |       |
    * |-------+-------+-------+-------+-------+-------+-------+                    +-------+-------+-------+-------+-------+-------+-------|
-   * | RGB ON|   !   |   "   |   #   |   $   |   %   |       |                    |       |   &   |   '   |   (   |   )   |   @   |   =   |
+   * | RGB ON|   !   |   "   |   #   |   $   |   %   |  Del  |                    |       |   &   |   '   |   (   |   )   |   @   |   =   |
    * |-------+-------+-------+-------+-------+-------+-------+                    +-------+-------+-------+-------+-------+-------+-------|
-   * |  MODE |   1   |   2   |   3   |   4   |   5   |   BS  |                    | Enter |   6   |   7   |   8   |   9   |   0   |   [   |
+   * |  MODE |   1   |   2   |   3   |   4   |   5   |       |                    | Enter |   6   |   7   |   8   |   9   |   0   |  ^ ~  |
    * |-------+-------+-------+-------+-------+-------+-------+                    +-------+-------+-------+-------+-------+-------+-------|
-   * | BL ON |  Home | PageUp| PageDn|  End  |  F11  |       |                    |       |  F12  |  Left |   Up  |  Down | Right |   ]   |
+   * | BL ON |  Home | PageUp| PageDn|  End  |  F11  | RESET |                    |       |  F12  |  Left |   Up  |  Down | Right |  ¥ |  |
    * |-------+-------+-------+-------+-------+-------+-------+-------+    +-------+------ +-------+-------+-------+-------+-------+-------|
-   * |       |       |       |       |       |  Alt  |  Ctrl | Lower |    | Raise | Shift | Space |       |       |       |       |       |
+   * |       |       |       |       |       |       |       | Lower |    | Raise |       |       |       |       |       |       |       |
    * ,-------------------------------+       +-----------------------+    +-----------------------+       +-------------------------------.
    */
   [_LOWER] = LAYOUT(
-    KC_NO,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_NO,                      KC_NO,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_NO,   \
-    RGB_TOG, JP_EXLM, JP_DQUO, JP_HASH, JP_DLR,  JP_PERC, KC_NO,                      KC_NO,   JP_AMPR, JP_QUOT, JP_LPRN, JP_RPRN, JP_AT,   S(JP_MINS), \
-    RGB_MOD, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_BSPC,                    KC_ENT,  KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    JP_LBRC, \
-    BL_TOGG, KC_HOME, KC_PGUP, KC_PGDN, KC_END,  KC_F11,  KC_NO,                      KC_NO,   KC_F12,  KC_LEFT, KC_UP,   KC_DOWN, KC_RGHT, JP_RBRC, \
-    KC_NO,   KC_NO, KC_NO,   KC_NO,            KC_LALT, KC_LCTL, LOWER,      RAISE,   KC_RSFT, KC_SPC,           KC_NO,   KC_NO,   KC_NO,   KC_NO    \
+    _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   _______,                    _______, KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  _______, \
+    RGB_TOG, JP_EXLM, JP_DQUO, JP_HASH, JP_DLR,  JP_PERC, KC_DEL ,                    _______, JP_AMPR, JP_QUOT, JP_LPRN, JP_RPRN, JP_AT,   S(JP_MINS), \
+    RGB_MOD, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    _______,                    KC_ENT,  KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    JP_CIRC, \
+    BL_TOGG, KC_HOME, KC_PGUP, KC_PGDN, KC_END,  KC_F11,  RESET,                      KC_NO,   KC_F12,  KC_LEFT, KC_UP,   KC_DOWN, KC_RGHT, JP_YEN,  \
+    KC_NO,   KC_NO,   KC_NO,   KC_NO,            _______, _______, LOWER,    RAISE,   _______, _______,          _______, _______, _______, _______  \
   ),
 };
 
