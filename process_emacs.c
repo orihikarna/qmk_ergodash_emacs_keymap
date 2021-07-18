@@ -18,7 +18,7 @@
 #define MOD_C MOD_BIT(KC_LCTL)
 #define MOD_S MOD_BIT(KC_LSFT)
 #define MOD_M MOD_BIT(KC_LALT)
-#define MOD_G MOD_BIG(KC_LGUI)
+#define MOD_G MOD_BIT(KC_LGUI)
 #define MOD_CS (MOD_C|MOD_S)
 #define MOD_CM (MOD_C|MOD_M)
 #define MOD_SM (MOD_S|MOD_M)
@@ -27,12 +27,12 @@
 #define ANY_C MOD_BIT(KC_RCTL)
 #define ANY_S MOD_BIT(KC_RSFT)
 #define ANY_M MOD_BIT(KC_RALT)
-#define ANY_G MOD_BIG(KC_RGUI)
+#define ANY_G MOD_BIT(KC_RGUI)
 #define ANY_SM (ANY_S|ANY_M)
 
-// emacs mode type (use right keycodes)
-#define MOD_TABLE MOD_BIT(KC_RCTL)
-#define MOD_MACRO MOD_BIT(KC_RSFT)
+// emacs mode type
+#define MOD_TABLE MOD_BIT(KC_LGUI)
+#define MOD_MACRO MOD_BIT(KC_RGUI)
 
 
 // declarations
@@ -94,6 +94,7 @@ typedef struct {
 static uint8_t map_table_index = MAP_TABLE_INDEX_DEFAULT;
 static uint8_t pressed_mods = 0;
 static uint8_t pressed_keycode = KC_NO;
+static uint8_t registered_mods = 0;
 static uint8_t mapped_mods = 0;
 static uint8_t mapped_keycode = KC_NO;
 #ifdef AVOID_SINGLE_ALT_WINDOWS
@@ -196,6 +197,7 @@ static const uint8_t map_table_default[][MAP_ENTRY_SIZE] = {
 
 const uint8_t map_table_cxprefix[][MAP_ENTRY_SIZE] = {
     { MOD_C         , KC_Q,    MOD_TABLE, MAP_TABLE_INDEX_NONE },
+    { MOD_C         , KC_X,    MOD_TABLE, MAP_TABLE_INDEX_CXPREFIX },// not to go back to default by chatters of X key
     { MOD_C         , KC_S,    MOD_C,     KC_S    },// save
     { MOD_C         , KC_F,    MOD_C,     KC_O    },// open
     { MOD_C         , KC_C,    MOD_M,     KC_F4   },// close
@@ -204,8 +206,13 @@ const uint8_t map_table_cxprefix[][MAP_ENTRY_SIZE] = {
 };
 #define MAP_COUNT_CXPREFIX (sizeof( map_table_cxprefix ) / sizeof( map_table_cxprefix[0] ))
 
+static void map_table_cxprefix_on_enter( void ) {
+    backlight_enable();
+}
+
 static void map_table_cxprefix_on_search( uint8_t index ) {
     map_table_index = MAP_TABLE_INDEX_DEFAULT;
+    backlight_disable();
 }
 
 const uint8_t map_table_marksel[][MAP_ENTRY_SIZE] = {
@@ -233,39 +240,34 @@ const uint8_t map_table_marksel[][MAP_ENTRY_SIZE] = {
 #define MAP_COUNT_MARKSEL (sizeof( map_table_marksel ) / sizeof( map_table_marksel[0] ))
 
 static void map_table_marksel_on_enter( void ) {
-    backlight_toggle();
+    backlight_enable();
 }
 
 static void map_table_marksel_on_search( uint8_t index ) {
     if (index < 4 || MAP_COUNT_MARKSEL <= index) {
         map_table_index = MAP_TABLE_INDEX_DEFAULT;
-        backlight_toggle();
+        backlight_disable();
     }
 }
 
 static SMapTable map_tables[MAP_TABLE_COUNT] = {
     [MAP_TABLE_INDEX_NONE]     = (SMapTable) { map_table_none,     MAP_COUNT_NONE,     NULL, NULL }, 
     [MAP_TABLE_INDEX_DEFAULT]  = (SMapTable) { map_table_default,  MAP_COUNT_DEFAULT,  NULL, NULL }, 
-    [MAP_TABLE_INDEX_CXPREFIX] = (SMapTable) { map_table_cxprefix, MAP_COUNT_CXPREFIX, NULL, map_table_cxprefix_on_search }, 
+    [MAP_TABLE_INDEX_CXPREFIX] = (SMapTable) { map_table_cxprefix, MAP_COUNT_CXPREFIX, map_table_cxprefix_on_enter, map_table_cxprefix_on_search }, 
     [MAP_TABLE_INDEX_MARKSEL]  = (SMapTable) { map_table_marksel,  MAP_COUNT_MARKSEL,  map_table_marksel_on_enter, map_table_marksel_on_search },
 };
 
 
 // mapping functions
 static bool match_mods2( uint8_t pressed, uint8_t mods, uint8_t* any_mods ) {
-    pressed = (pressed | (pressed >> 4)) & 0x07;
+    pressed = (pressed | (pressed >> 4)) & 0x07;// combine Left & Right, ignore GUI
     const uint8_t req = mods & 0x0f;
     const uint8_t any = (mods >> 4) & 0x0f;
     *any_mods = pressed & any;
     return ((pressed & ~any) == (req & ~any));
 }
 
-static void register_mods2( uint8_t mods, bool is_taphold ) {
-#ifdef USE_TAP_HOLD_ALT_CTL
-    if (is_taphold == false) {
-#else
-    {
-#endif
+static void register_mods2( uint8_t mods ) {
 #ifdef AVOID_SINGLE_ALT_WINDOWS
     if (mods & MOD_MASK_ALT) {
         register_code( KC_LCTL );
@@ -274,30 +276,30 @@ static void register_mods2( uint8_t mods, bool is_taphold ) {
         unregister_code( KC_LCTL );
     }
 #else
-        if (mods & MOD_BIT( KC_LALT )) register_code( KC_LALT );
-        if (mods & MOD_BIT( KC_RALT )) register_code( KC_RALT );
+    if (mods & MOD_BIT( KC_LALT )) register_code( KC_LALT );
+    if (mods & MOD_BIT( KC_RALT )) register_code( KC_RALT );
 #endif
     if (mods & MOD_BIT( KC_LCTL )) register_code( KC_LCTL );
     if (mods & MOD_BIT( KC_RCTL )) register_code( KC_RCTL );
-    }
     if (mods & MOD_BIT( KC_LSFT )) register_code( KC_LSFT );
     if (mods & MOD_BIT( KC_RSFT )) register_code( KC_RSFT );
 }
 
-static void unregister_mods2( uint8_t mods, bool is_taphold ) {
+static void unregister_mods2( uint8_t mods ) {
     if (mods & MOD_BIT( KC_RSFT )) unregister_code( KC_RSFT );
     if (mods & MOD_BIT( KC_LSFT )) unregister_code( KC_LSFT );
-#ifdef USE_TAP_HOLD_ALT_CTL
-    if (is_taphold == false) {
-#else
-    {
-#endif
     if (mods & MOD_BIT( KC_RCTL )) unregister_code( KC_RCTL );
     if (mods & MOD_BIT( KC_LCTL )) unregister_code( KC_LCTL );
     if (mods & MOD_BIT( KC_RALT )) unregister_code( KC_RALT );
     if (mods & MOD_BIT( KC_LALT )) unregister_code( KC_LALT );
 }
-    }
+
+static void swap_mods2( uint8_t new_mods, uint8_t old_mods ) {
+    const uint8_t unreg_mods = old_mods & ~new_mods;
+    const uint8_t reg_mods = new_mods & ~old_mods;
+    if (unreg_mods) unregister_mods2( unreg_mods );
+    if (reg_mods) register_mods2( reg_mods );
+}
 
 // returns true when unmapped
 static bool unmap_key( void ) {
@@ -308,13 +310,11 @@ static bool unmap_key( void ) {
         // do nothing
     } else if (mapped_mods == MOD_MACRO) {
         // restore the mod keys
-        register_mods2( pressed_mods, true );
+        register_mods2( registered_mods );
     } else {
         // release the mapped key/mods
         unregister_code( mapped_keycode );
-        unregister_mods2( mapped_mods, false );
-        // restore the mod keys
-        register_mods2( pressed_mods, true );
+        swap_mods2( registered_mods, mapped_mods );
     }
     mapped_mods = 0;
     mapped_keycode = KC_NO;
@@ -330,7 +330,7 @@ static void map_key( uint8_t mods, uint8_t keycode ) {
         }
     } else if (mods == MOD_MACRO) {
         // release the currrent mods
-        unregister_mods2( pressed_mods, true );
+        unregister_mods2( registered_mods );
         {// send the macro sequence
             const uint16_t* seq = macro_seqs[keycode];
             uint8_t n = 0;
@@ -341,59 +341,56 @@ static void map_key( uint8_t mods, uint8_t keycode ) {
         }
     } else {
         // release the currrent mods
-        unregister_mods2( pressed_mods, true );
         // press the mapped key/mods
-        register_mods2( mods, false );
+        swap_mods2( mods, registered_mods );
         register_code( keycode );
     }
     mapped_mods = mods;
     mapped_keycode = keycode;
 }
 
-bool modtap_is_tap( SModTapHold* tap, const keyrecord_t* record ) {
+static bool modtap_is_tap( SModTapHold* tap, const keyrecord_t* record ) {
     const int16_t tdiff = TIMER_DIFF_16( record->event.time, tap->time );
     return (10 <= tdiff && tdiff < 300);
 }
 
-bool modtap_on_press( const keyrecord_t* record, uint16_t keycode ) {
-    bool cont = true;
+static bool modtap_on_press( const keyrecord_t* record, uint16_t modcode ) {
+    bool to_register = true;
     for (uint8_t n = 0; n < MOD_TAP_COUNT; ++n) {
         SModTapHold* tap = &mod_taps[n];
-        if (tap->modcode != keycode) continue;
+        if (tap->modcode != modcode) continue;
+        to_register = false;
         const bool is_tap = modtap_is_tap( tap, record );
+        tap->time = record->event.time;
         switch (tap->state) {
           case ETHS_Released:
             tap->state = ETHS_Pressed;
-            pressed_mods |= MOD_BIT( keycode );
-            cont = false;
             break;
 
           case ETHS_Tapped:
             if (is_tap) {
                 tap->state = ETHS_Held;
-                register_code( tap->modcode );
+                to_register = true;
             } else {
                 tap->state = ETHS_Pressed;
-                pressed_mods |= MOD_BIT( keycode );
             }
-            cont = false;
             break;
         }
-        tap->time = record->event.time;
         break;
     }
-    if (cont) {
-            pressed_mods |= MOD_BIT( keycode );
+    if (to_register) {
+        registered_mods |= MOD_BIT( modcode );
+        register_code( modcode );
     }
-    return cont;
+    return false;
 }
 
-bool modtap_on_release( const keyrecord_t* record, uint16_t keycode ) {
-    bool cont = true;
+static bool modtap_on_release( const keyrecord_t* record, uint16_t modcode ) {
     for (uint8_t n = 0; n < MOD_TAP_COUNT; ++n) {
         SModTapHold* tap = &mod_taps[n];
-        if (tap->modcode != keycode) continue;
+        if (tap->modcode != modcode) continue;
         const bool is_tap = modtap_is_tap( tap, record );
+        tap->time = record->event.time;
         switch (tap->state) {
           case ETHS_Pressed:
             if (is_tap) {
@@ -401,23 +398,34 @@ bool modtap_on_release( const keyrecord_t* record, uint16_t keycode ) {
             } else {
                 tap->state = ETHS_Released;
             }
-            pressed_mods &= ~MOD_BIT( keycode );
-            cont = false;
             break;
 
           case ETHS_Held:
             tap->state = ETHS_Released;
-            unregister_code( tap->modcode );
-            cont = false;
             break;
         }
-        tap->time = record->event.time;
         break;
     }
-    if (cont) {
-        pressed_mods &= ~MOD_BIT( keycode );
+    if (registered_mods & MOD_BIT( modcode )) {
+        registered_mods &= ~MOD_BIT( modcode );
+        unregister_code( modcode );
     }
-    return cont;
+    return false;
+}
+
+static void modtap_hold_mods( uint8_t mods_mask ) {
+    for (uint8_t n = 0; n < MOD_TAP_COUNT; ++n) {
+        SModTapHold* tap = &mod_taps[n];
+        const uint8_t mod_bit = MOD_BIT( tap->modcode );
+        if ((mod_bit & mods_mask) == 0) continue;// not a target
+        if ((mod_bit & pressed_mods) == 0) continue;// not pressed
+        if (mod_bit & registered_mods) continue;// already held
+        if (tap->state == ETHS_Pressed) {
+            tap->state = ETHS_Held;
+            registered_mods |= mod_bit;
+            register_code( tap->modcode );
+        }
+    }
 }
 
 #ifdef AVOID_SINGLE_ALT_WINDOWS
@@ -455,32 +463,31 @@ bool process_record_emacs( uint16_t keycode, keyrecord_t* record ) {
     }
 #endif
     if (IS_MOD( keycode )) {
+        if (keycode == KC_LGUI || keycode == KC_RGUI) return true;
         // keep tracking the mod key state
         bool cont = true;
         if (record->event.pressed) {
+            pressed_mods |= MOD_BIT( keycode );
 #ifdef USE_TAP_HOLD_ALT_CTL
             cont = modtap_on_press( record, keycode );
-#else
-            pressed_mods |= MOD_BIT( keycode );
 #endif
 #ifdef AVOID_SINGLE_ALT_WINDOWS
             if (singlealt_on_press( keycode ) == false) return false;
 #endif
         } else {
+            pressed_mods &= ~MOD_BIT( keycode );
 #ifdef USE_TAP_HOLD_ALT_CTL
             cont = modtap_on_release( record, keycode );
-#else
-            pressed_mods &= ~MOD_BIT( keycode );
 #endif
 #ifdef AVOID_SINGLE_ALT_WINDOWS
             if (singlealt_on_release( keycode ) == false) return false;
 #endif
         }
-        return !unmap_key() && cont;
+        const bool unmapped = unmap_key();
+        return !unmapped && cont;
     } else if (IS_KEY( keycode )) {
         if (record->event.pressed) {// pressed
-            //const bool unmapped = unmap_key();
-            unmap_key();
+            const bool unmapped = unmap_key();
             bool mapped = false;
             {// search table for mapping
                 const SMapTable* map_table = &map_tables[map_table_index];
@@ -490,8 +497,8 @@ bool process_record_emacs( uint16_t keycode, keyrecord_t* record ) {
                     const SMapEntry* map = (const SMapEntry*) map_table->m_table[index];
                     uint8_t any_mods = 0;
                     if (keycode == map->src_code && match_mods2( pressed_mods, map->src_mods, &any_mods )) {// found!
-                        pressed_keycode = keycode;
                         map_key( map->dest_mods | any_mods, map->dest_code );
+                        pressed_keycode = keycode;
                         mapped = true;
                         break;
                     }
@@ -500,28 +507,23 @@ bool process_record_emacs( uint16_t keycode, keyrecord_t* record ) {
                     (*map_table->m_on_search_func)( index );
                 }
             }
-            if (mapped == false) {
-                // send the key code as is, also send mods
-                for (uint8_t n = 0; n < MOD_TAP_COUNT; ++n) {
-                    SModTapHold* tap = &mod_taps[n];
-                    if (tap->state == ETHS_Pressed) {
-                        tap->state = ETHS_Held;
-                        pressed_mods &= ~MOD_BIT( tap->modcode );
-                        register_code( tap->modcode );
-                    }
+            if (pressed_keycode == KC_NO && mapped == false && map_table_index == MAP_TABLE_INDEX_DEFAULT && pressed_mods != 0) {
+                if (keycode == KC_TAB && (pressed_mods & MOD_MASK_ALT)) {// special for Alt-Tab
+                    modtap_hold_mods( MOD_MASK_ALT );
                 }
+                map_key( pressed_mods, keycode );
+                pressed_keycode = keycode;
+                mapped = true;
             }
-            return !mapped;
-            /*
             if (unmapped == false && mapped == false) {
                 // no processing here, leave it to the next chain
                 return true;
             }
+            // need to return false when unmapped, so register unmapped keycode here
             if (unmapped && mapped == false) {
                 register_code( keycode );
             }
             return false;
-            */
         } else {// released
             if (pressed_keycode != KC_NO && pressed_keycode == keycode) {
                 pressed_keycode = KC_NO;
