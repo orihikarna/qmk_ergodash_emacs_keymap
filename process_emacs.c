@@ -207,12 +207,12 @@ const uint8_t map_table_cxprefix[][MAP_ENTRY_SIZE] = {
 #define MAP_COUNT_CXPREFIX (sizeof( map_table_cxprefix ) / sizeof( map_table_cxprefix[0] ))
 
 static void map_table_cxprefix_on_enter( void ) {
-    backlight_enable();
+    //backlight_enable();
 }
 
 static void map_table_cxprefix_on_search( uint8_t index ) {
     map_table_index = MAP_TABLE_INDEX_DEFAULT;
-    backlight_disable();
+    //backlight_disable();
 }
 
 const uint8_t map_table_marksel[][MAP_ENTRY_SIZE] = {
@@ -349,6 +349,7 @@ static void map_key( uint8_t mods, uint8_t keycode ) {
     mapped_keycode = keycode;
 }
 
+#ifdef USE_TAP_HOLD_ALT_CTL
 static bool modtap_is_tap( SModTapHold* tap, const keyrecord_t* record ) {
     const int16_t tdiff = TIMER_DIFF_16( record->event.time, tap->time );
     return (10 <= tdiff && tdiff < 300);
@@ -413,7 +414,7 @@ static bool modtap_on_release( const keyrecord_t* record, uint16_t modcode ) {
     return false;
 }
 
-static void modtap_hold_mods( uint8_t mods_mask ) {
+static void modtap_hold_mods_if_pressed( uint8_t mods_mask ) {
     for (uint8_t n = 0; n < MOD_TAP_COUNT; ++n) {
         SModTapHold* tap = &mod_taps[n];
         const uint8_t mod_bit = MOD_BIT( tap->modcode );
@@ -427,7 +428,7 @@ static void modtap_hold_mods( uint8_t mods_mask ) {
         }
     }
 }
-
+#endif
 #ifdef AVOID_SINGLE_ALT_WINDOWS
 // send CTL press/release when ALT is pressed to avoid that Windows menu gets focused
 bool singlealt_on_press( uint16_t keycode ) {
@@ -470,6 +471,8 @@ bool process_record_emacs( uint16_t keycode, keyrecord_t* record ) {
             pressed_mods |= MOD_BIT( keycode );
 #ifdef USE_TAP_HOLD_ALT_CTL
             cont = modtap_on_press( record, keycode );
+#else
+            registered_mods = pressed_mods;
 #endif
 #ifdef AVOID_SINGLE_ALT_WINDOWS
             if (singlealt_on_press( keycode ) == false) return false;
@@ -478,6 +481,8 @@ bool process_record_emacs( uint16_t keycode, keyrecord_t* record ) {
             pressed_mods &= ~MOD_BIT( keycode );
 #ifdef USE_TAP_HOLD_ALT_CTL
             cont = modtap_on_release( record, keycode );
+#else
+            registered_mods = pressed_mods;
 #endif
 #ifdef AVOID_SINGLE_ALT_WINDOWS
             if (singlealt_on_release( keycode ) == false) return false;
@@ -507,14 +512,19 @@ bool process_record_emacs( uint16_t keycode, keyrecord_t* record ) {
                     (*map_table->m_on_search_func)( index );
                 }
             }
+#ifdef USE_TAP_HOLD_ALT_CTL
             if (pressed_keycode == KC_NO && mapped == false && map_table_index == MAP_TABLE_INDEX_DEFAULT && pressed_mods != 0) {
-                if (keycode == KC_TAB && (pressed_mods & MOD_MASK_ALT)) {// special for Alt-Tab
-                    modtap_hold_mods( MOD_MASK_ALT );
+                if (keycode == KC_TAB) {// special for Ctl-Tab, Alt-Tab
+                    const uint8_t mods = (pressed_mods & (MOD_MASK_CTRL | MOD_MASK_ALT));
+                    if (mods) {
+                        modtap_hold_mods_if_pressed( mods );
+                    }
                 }
                 map_key( pressed_mods, keycode );
                 pressed_keycode = keycode;
                 mapped = true;
             }
+#endif
             if (unmapped == false && mapped == false) {
                 // no processing here, leave it to the next chain
                 return true;
