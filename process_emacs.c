@@ -35,6 +35,42 @@
 #define MOD_MACRO MOD_BIT(KC_RGUI)
 
 
+// utility functions
+static void register_mods2( uint8_t mods ) {
+#ifdef AVOID_SINGLE_ALT_WINDOWS
+    if (mods & MOD_MASK_ALT) {
+        register_code( KC_LCTL );
+        if (mods & MOD_BIT( KC_LALT )) register_code( KC_LALT );
+        if (mods & MOD_BIT( KC_RALT )) register_code( KC_RALT );
+        unregister_code( KC_LCTL );
+    }
+#else
+    if (mods & MOD_BIT( KC_LALT )) register_code( KC_LALT );
+    if (mods & MOD_BIT( KC_RALT )) register_code( KC_RALT );
+#endif
+    if (mods & MOD_BIT( KC_LCTL )) register_code( KC_LCTL );
+    if (mods & MOD_BIT( KC_RCTL )) register_code( KC_RCTL );
+    if (mods & MOD_BIT( KC_LSFT )) register_code( KC_LSFT );
+    if (mods & MOD_BIT( KC_RSFT )) register_code( KC_RSFT );
+}
+
+static void unregister_mods2( uint8_t mods ) {
+    if (mods & MOD_BIT( KC_RSFT )) unregister_code( KC_RSFT );
+    if (mods & MOD_BIT( KC_LSFT )) unregister_code( KC_LSFT );
+    if (mods & MOD_BIT( KC_RCTL )) unregister_code( KC_RCTL );
+    if (mods & MOD_BIT( KC_LCTL )) unregister_code( KC_LCTL );
+    if (mods & MOD_BIT( KC_RALT )) unregister_code( KC_RALT );
+    if (mods & MOD_BIT( KC_LALT )) unregister_code( KC_LALT );
+}
+
+static void swap_mods2( uint8_t new_mods, uint8_t old_mods ) {
+    const uint8_t unreg_mods = old_mods & ~new_mods;
+    const uint8_t reg_mods = new_mods & ~old_mods;
+    if (unreg_mods) unregister_mods2( unreg_mods );
+    if (reg_mods) register_mods2( reg_mods );
+}
+
+
 // declarations
 typedef struct {
     uint8_t src_mods;// L: pressed, R: any
@@ -136,6 +172,11 @@ static const uint8_t map_table_none[][MAP_ENTRY_SIZE] = {
     { MOD_C         , KC_Q,    MOD_TABLE, MAP_TABLE_INDEX_DEFAULT },
 };
 #define MAP_COUNT_NONE (sizeof( map_table_none ) / sizeof( map_table_none[0] ))
+
+static void map_table_none_on_enter( void ) {
+    swap_mods2( pressed_mods, registered_mods );
+    registered_mods = pressed_mods;
+}
 
 static const uint8_t map_table_default[][MAP_ENTRY_SIZE] = {
     { MOD_C         , KC_Q,    MOD_TABLE, MAP_TABLE_INDEX_NONE },
@@ -251,7 +292,7 @@ static void map_table_marksel_on_search( uint8_t index ) {
 }
 
 static SMapTable map_tables[MAP_TABLE_COUNT] = {
-    [MAP_TABLE_INDEX_NONE]     = (SMapTable) { map_table_none,     MAP_COUNT_NONE,     NULL, NULL }, 
+    [MAP_TABLE_INDEX_NONE]     = (SMapTable) { map_table_none,     MAP_COUNT_NONE,     map_table_none_on_enter, NULL }, 
     [MAP_TABLE_INDEX_DEFAULT]  = (SMapTable) { map_table_default,  MAP_COUNT_DEFAULT,  NULL, NULL }, 
     [MAP_TABLE_INDEX_CXPREFIX] = (SMapTable) { map_table_cxprefix, MAP_COUNT_CXPREFIX, map_table_cxprefix_on_enter, map_table_cxprefix_on_search }, 
     [MAP_TABLE_INDEX_MARKSEL]  = (SMapTable) { map_table_marksel,  MAP_COUNT_MARKSEL,  map_table_marksel_on_enter, map_table_marksel_on_search },
@@ -265,40 +306,6 @@ static bool match_mods2( uint8_t pressed, uint8_t mods, uint8_t* any_mods ) {
     const uint8_t any = (mods >> 4) & 0x0f;
     *any_mods = pressed & any;
     return ((pressed & ~any) == (req & ~any));
-}
-
-static void register_mods2( uint8_t mods ) {
-#ifdef AVOID_SINGLE_ALT_WINDOWS
-    if (mods & MOD_MASK_ALT) {
-        register_code( KC_LCTL );
-        if (mods & MOD_BIT( KC_LALT )) register_code( KC_LALT );
-        if (mods & MOD_BIT( KC_RALT )) register_code( KC_RALT );
-        unregister_code( KC_LCTL );
-    }
-#else
-    if (mods & MOD_BIT( KC_LALT )) register_code( KC_LALT );
-    if (mods & MOD_BIT( KC_RALT )) register_code( KC_RALT );
-#endif
-    if (mods & MOD_BIT( KC_LCTL )) register_code( KC_LCTL );
-    if (mods & MOD_BIT( KC_RCTL )) register_code( KC_RCTL );
-    if (mods & MOD_BIT( KC_LSFT )) register_code( KC_LSFT );
-    if (mods & MOD_BIT( KC_RSFT )) register_code( KC_RSFT );
-}
-
-static void unregister_mods2( uint8_t mods ) {
-    if (mods & MOD_BIT( KC_RSFT )) unregister_code( KC_RSFT );
-    if (mods & MOD_BIT( KC_LSFT )) unregister_code( KC_LSFT );
-    if (mods & MOD_BIT( KC_RCTL )) unregister_code( KC_RCTL );
-    if (mods & MOD_BIT( KC_LCTL )) unregister_code( KC_LCTL );
-    if (mods & MOD_BIT( KC_RALT )) unregister_code( KC_RALT );
-    if (mods & MOD_BIT( KC_LALT )) unregister_code( KC_LALT );
-}
-
-static void swap_mods2( uint8_t new_mods, uint8_t old_mods ) {
-    const uint8_t unreg_mods = old_mods & ~new_mods;
-    const uint8_t reg_mods = new_mods & ~old_mods;
-    if (unreg_mods) unregister_mods2( unreg_mods );
-    if (reg_mods) register_mods2( reg_mods );
 }
 
 // returns true when unmapped
@@ -470,7 +477,11 @@ bool process_record_emacs( uint16_t keycode, keyrecord_t* record ) {
         if (record->event.pressed) {
             pressed_mods |= MOD_BIT( keycode );
 #ifdef USE_TAP_HOLD_ALT_CTL
-            cont = modtap_on_press( record, keycode );
+            if (map_table_index == MAP_TABLE_INDEX_NONE) {
+                registered_mods = pressed_mods;
+            } else {
+                cont = modtap_on_press( record, keycode );
+            }
 #else
             registered_mods = pressed_mods;
 #endif
@@ -480,7 +491,11 @@ bool process_record_emacs( uint16_t keycode, keyrecord_t* record ) {
         } else {
             pressed_mods &= ~MOD_BIT( keycode );
 #ifdef USE_TAP_HOLD_ALT_CTL
-            cont = modtap_on_release( record, keycode );
+            if (map_table_index == MAP_TABLE_INDEX_NONE) {
+                registered_mods = pressed_mods;
+            } else {
+               cont = modtap_on_release( record, keycode );
+            }
 #else
             registered_mods = pressed_mods;
 #endif
