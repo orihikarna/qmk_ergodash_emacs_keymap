@@ -22,9 +22,9 @@ A limitation of this method is that it cannot support key-repeat by OS because t
 Although, 'ALT single tap + (key)' should still be available.
 
 ### Tap and hold behavior of Mod keys (since bd51617, 2021/07/23)
-When `USE_TAP_HOLD_ALT_CTL` is defined, the press / release of Alt and Ctrl keys are not sent immediately to the host: they will be sent only when other non-modifier key is pressed / released.
-This is to avoid:
-- Context menus that are activated Ctrl is held (seen with Word, PowerPoint)
+When `USE_TAP_HOLD_ALT_CTL` is defined, the press / release of Alt and Ctrl keys are **not** sent immediately to the host: they will be sent only when other non-modifier key is pressed / released.
+This behavior is to avoid:
+- Context menus that are activated when Ctrl is held (seen with Word, PowerPoint)
 - Alt menu of Windows (When Alt is pressed, the menu bar is focused)
 
 However, we sometimes need to press Alt or Ctrl solely: ex. hold a Ctrl key when selecting multiple items on a list control.
