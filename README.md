@@ -21,6 +21,18 @@ A limitation of this method is that it cannot support key-repeat by OS because t
 * If this module is used, Windows' ALT+(key) menu (ex. ALT+F for File menu) will be disabled.
 Although, 'ALT single tap + (key)' should still be available.
 
+### Tap and hold behavior of Mod keys (since bd51617, 2021/07/23)
+When `USE_TAP_HOLD_ALT_CTL` is defined, the press / release of Alt and Ctrl keys are not sent immediately to the host: they will be sent only when other non-modifier key is pressed / released.
+This is to avoid:
+- Context menus that are activated Ctrl is held (seen with Word, PowerPoint)
+- Alt menu of Windows (When Alt is pressed, the menu bar is focused)
+
+However, we sometimes need to press Alt or Ctrl solely: ex. hold a Ctrl key when selecting multiple items on a list control.
+For those cases, please use tap & hold of the modifier key, and then the key press / release of them will be sent immediately to the host.
+
+Also, there is another case where the tap and hold behavior is not suitable: Alt+tab's and Ctrl+tab's.
+In these key sequences, it would be very annoying if the Alt or the Ctrl key was not held automatically.
+So, an exceptional code has been added to hold Alt or Ctrl presses when `KC_TAB` is pressed.
 
 ## How to use Emacs mode
 
@@ -60,7 +72,7 @@ SRC += process_emacs.c
 ## List of defined Emacs key bindings
 
 In the following tables, the asterisks '*' mean that the modifier keys that follow them will be kept pressed/released during the translation.
-For example, C-m will be translated to Enter as shown in the fifth row of the table below (Default mode), and '-*S-*M' part means that Shift and Alt keys may be either pressed / released state and the state will be kept throught the translation.
+For example, C-m will be translated to Enter as shown in the fifth row of the table below (Default mode), and '-*S-*M' part means that Shift and Alt keys may be either pressed / released state and the state will be kept through the translation.
 Therefore, if Alt(Meta) key was pressed when C-m was pressed, namely when C-M-m was pressed, this will be translated to M-Enter: Alt will be pressed, and Shift released.
 
 ### Default mode
